@@ -73,6 +73,10 @@ Heroku is a platform as a service (PaaS) that enables developers to build and ru
     ```sh
     heroku create <your_project_name>
     ```
+- Disable `collectstatic` running during project deployment
+    ```sh
+    heroku config:set DISABLE_COLLECTSTATIC=1
+    ```
 - Push your project to Heroku
     ```sh
     git push heroku master
