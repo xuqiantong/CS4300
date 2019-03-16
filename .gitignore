@@ -1,2 +1,3 @@
-vagrant/.vagrant
-vagrant/a4keypair.pem
+.pyc
+.venv
+venv

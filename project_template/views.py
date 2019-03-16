@@ -22,7 +22,7 @@ def index(request):
             output = paginator.page(1)
         except EmptyPage:
             output = paginator.page(paginator.num_pages)
-    return render_to_response('project_template/index.html', 
+    return render_to_response('index.html', 
                           {'output': output,
                            'magic_url': request.get_full_path(),
                            })
