@@ -1,9 +1,0 @@
-[
-  {
-    "model": "project_template.Docs",
-    "pk": 1,
-    "fields": {
-      "address": "jsons/kardashian-transcripts.json"
-    }
-  }
-]
