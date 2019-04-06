@@ -4,6 +4,8 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import loader
 
+from .forms import SearchForm
+
 # Create your views here.
 def search(request):
     query = request.GET.get('search')
@@ -28,5 +30,9 @@ def search(request):
             'output_message': output_message,
             'data': data,
             'magic_url': request.get_full_path(),
+            'form': SearchForm()
         }
     )
+
+def home(request):
+    return render_to_response('home.html')

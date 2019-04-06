@@ -1,3 +1,9 @@
+body {
+    background-image: url('./images/background.jpg');
+    background-position: center;
+    background-size: cover;
+    height: 100%;
+}
 @media (min-width: 1200px) {
 .container {
     max-width: 970px;
@@ -8,10 +14,12 @@
 padding: 20px 0;
 text-align:center;
 }
-body {
-padding-top: 15%;
-padding-bottom: 15px;
-}
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+ }
 .global-search {
 text-align:center;
 padding:10px;
@@ -19,7 +27,7 @@ padding:10px;
 .global-search .form-control {
 width:500px;
 }
-.global-search * {
+/* .global-search * {
 display:inline-block;
 margin-bottom:0;
 }
@@ -35,4 +43,4 @@ border: none
 }
 .step-links a{
 color: #4285F4;
-}
+} */

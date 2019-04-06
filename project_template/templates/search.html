@@ -1,56 +1,24 @@
-<html>
-    <head>
-        <link rel="stylesheet" href="/static/bootstrap.min.css">
-        <link rel="stylesheet" href="/static/main.css">
-    </head>
-    
-    <body>
-        <!-- TODO: Please change lines 10 and 11 according to your actual project name and student names-->
-        <div class="topcorner">
-            <p>CS4300: Career Advisor</p>
-            <p>Frederick Kauber (fdk9), Jeffrey Liu (jl2964), Noel Picinich (nmp53), Nicole Kwok (njk72), and Nathan Bala (nb378)</p>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center">
+    <form class="p-5 mt-5 shadow rounded w-50 bg-light" action="/search/" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="d-flex justify-content-between form-group">
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+                {% if field.help_text %}
+                    <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <div class="d-flex pt-3 m-0 row justify-content-between">
+            <a href="/" class="btn btn-dark">< Prev</a>
+            <input type="submit" class="btn btn-dark" value="Submit >">
         </div>
         
-        <form class="form-inline global-search" method='GET'>
-            <h1 style="font-size: 55px; font-family:Futura; color: #4285F4">
-                C
-                <font color=#EA4335>S</font>
-                <font color=#FBBC05>4</font>
-                3
-                <font color=#34A853>0</font>
-                <font color=#EA4335>0</font>
-            </h1>
-            
-            <br><br>
-            
-            <div class="form-group">
-                <input id="input" type="text" name="search" class="form-control" placeholder="Your Input">
-            </div>
-            <button type="submit" class="btn btn-info"> Go! </button>
-        </form>
-        
-        <div class="form-inline global-search">
-            <h4>Query for: {{ output_message }}</h4><br>
-            {% for line in data %}
-                {{ line }}<br>
-            {% endfor %}
-            
-            <div class="pagination">
-                <span class="step-links">
-                    {% if data.has_previous %}
-                    <a href= "{{magic_url}}&page={{ output.previous_page_number }}">previous</a>
-                    {% endif %}
-                    
-                    <!-- Showing the page numbers in Html Page -->
-                    <span class="current">
-                    Page _{{ data.number }}_ of _{{ data.paginator.num_pages }}_
-                    </span>
-                    
-                    {% if data.has_next %}
-                    <a href= "{{magic_url}}&page={{ data.next_page_number }}">next</a>
-                    {% endif %}
-                </span>
-            </div>
-        </div>
-    </body>
-</html>
+    </form>
+</div>
+
+{% endblock content %}
