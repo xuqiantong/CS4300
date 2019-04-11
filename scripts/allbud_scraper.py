@@ -53,6 +53,9 @@ if __name__ == "__main__":
             for effect in aroma_effects:
                 aroma_effects_list.append(effect.get_text())
 
+            description = strain_soup.find("div", {"class": "panel-body well description"}). \
+                find("span", {"class": "hidden-xs"}, recursive=False).get_text().strip()
+
             percentages_dict = {}
             percent_wrapper = strain_soup.find("h4", {"class": "percentage"})
 
@@ -69,9 +72,9 @@ if __name__ == "__main__":
                 'medical': relieved_effects_list,
                 'flavor': flavor_effects_list,
                 'aroma': aroma_effects_list,
-                'percentages': percentages_dict
+                'percentages': percentages_dict,
+                'description': description
             }
-
         print('done with: ' + letter)
-    with open('allbud_output.json', 'w') as outfile:
+    with open('../data/allbud_output.json', 'w') as outfile:
         json.dump(results_dict, outfile)
