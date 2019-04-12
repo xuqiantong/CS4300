@@ -34,6 +34,65 @@ def editDistDP(str1, str2, m, n):
 
     return dp[m][n]
 
+def combine_data(curr_strain, strain_match_lst, info_dict):
+    curr_strainobject = info_dict[curr_strain]
+    strain_match_objectlst = []
+    for strain_match in strain_match_lst:
+        strain_match_objectlst.append(info_dict[strain_match])
+    strain_match_objectlst.append(curr_strainobject)
+    new_obj = {}
+    for m in strain_match_objectlst:
+        if "name" in new_obj.keys():
+            new_obj["name"] += ", " + m["name"]
+        else:
+            new_obj["name"] = m["name"]
+        if "description" in new_obj.keys():
+            new_obj["description"] += "/n" + m["description"]
+        else:
+            new_obj["description"] = m["description"]
+        if "rating" in new_obj.keys():
+            new_obj["rating"] += m["rating"]
+        else:
+            new_obj["rating"] = m["rating"]
+        if "positive" in new_obj.keys():
+            curr_pos = new_obj["positive"]
+            new_pos = m["positive"]
+            new_obj["positive"] = set(curr_pos + new_post)
+        else:
+            new_obj["positive"] = m["positive"]
+        if "flavor" in new_obj.keys():
+            curr_flavor = new_obj["flavor"]
+            new_flavor = m["flavor"]
+            new_obj["flavor"] = set(curr_flavor + new_flavor)
+        else:
+            new_obj["flavor"] = m["flavor"]
+        if "aroma" in new_obj.keys():
+            curr_aroma = new_obj["aroma"]
+            new_aroma = m["aroma"]
+            new_obj["aroma"] = set(curr_aroma + new_aroma)
+        else:
+            new_obj["aroma"] = m["aroma"]
+        if "medical" in new_obj.keys():
+            curr_medical = new_obj["medical"]
+            new_medical = m["medical"]
+            new_obj["medical"] = set(curr_medical + new_medical)
+        else:
+            new_obj["medical"] = m["medical"]
+        if "percentages" in new_obj.keys():
+            curr_percentages = new_obj["percentages"]
+            new_percentages = m["percentages"]
+            new_obj["percentages"] = {**new_percentages, **curr_percentages}
+        else:
+            new_obj["percentages"] = m["percentages"]
+    new_obj["rating"] = new_obj["rating"] / len(strain_match_objectlst)
+    return new_obj["name"], new_obj
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
@@ -59,23 +118,34 @@ if __name__ == "__main__":
 
     new_allbud_dict = {}
     done_lst = []
-    i = 0
     for allbud_strain in allbud_data.keys():
-        curr_strain_data = allbud_data[allbud_strain]
-        curr_description = curr_strain_data['description']
-        tokenize_lst = sent_tokenize(curr_description)
-        needed_sentence = ""
-        for sentence in tokenize_lst:
-            if "known as" in sentence:
-                i += 1
-                needed_sentence = sentence
-                break
-        if needed_sentence == "":
-            new_allbud_dict[allbud_strain] = allbud_data[allbud_strain]
+        if allbud_strain in done_lst:
+            continue
         else:
-            print(needed_sentence)
-            matches=re.findall(,needed_sentence)
-            print(matches)
+            curr_strain_data = allbud_data[allbud_strain]
+            curr_description = curr_strain_data['description']
+            tokenize_lst = sent_tokenize(curr_description)
+            needed_sentence = ""
+            for sentence in tokenize_lst:
+                if "known as" in sentence:
+                    needed_sentence = sentence
+                    break
+            if needed_sentence == "":
+                new_allbud_dict[allbud_strain] = allbud_data[allbud_strain]
+            else:
+                matches=re.findall(r'“(.*?)”',needed_sentence)
+                final_match_lst = []
+                for match in matches:
+                    new_match = match
+                    if "," in match:
+                        new_match = match.replace(",", "")
+                        final_match_lst.append(new_match)
+                print(final_match_lst)
+                info_return = combine_data(allbud_strain, final_match_lst, allbud_data)
+                new_allbud_dict[info_return[0]] = info_return[1]
+
+
+
 
 
 
