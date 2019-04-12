@@ -115,6 +115,7 @@ if __name__ == "__main__":
     with open('../data/studies.json', encoding="utf8") as f:
         otreeba_studies_data = json.load(f)['data']
 
+    
 
     new_allbud_dict = {}
     done_lst = []
@@ -133,14 +134,14 @@ if __name__ == "__main__":
             if needed_sentence == "":
                 new_allbud_dict[allbud_strain] = allbud_data[allbud_strain]
             else:
-                matches=re.findall(r'“(.*?)”',needed_sentence)
+                # matches=re.findall(r'“(.*?)”',needed_sentence)
+                matches=re.findall(r'\"(.*?)\"',needed_sentence)
                 final_match_lst = []
                 for match in matches:
                     new_match = match
                     if "," in match:
                         new_match = match.replace(",", "")
                         final_match_lst.append(new_match)
-                print(final_match_lst)
                 info_return = combine_data(allbud_strain, final_match_lst, allbud_data)
                 new_allbud_dict[info_return[0]] = info_return[1]
 
