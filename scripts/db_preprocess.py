@@ -46,7 +46,7 @@ def find_strain_obj_in_lst(name, lst):
             return obj
     return None
 
-def combine_data(curr_strainobject, strain_match_lst, info_dict):
+def combine_allbud_data(curr_strainobject, strain_match_lst, info_dict):
     strain_match_objectlst = []
     # find new strain object and add to lst
     for strain_match in strain_match_lst:
@@ -106,27 +106,122 @@ def combine_data(curr_strainobject, strain_match_lst, info_dict):
     new_obj["rating"] = new_obj["rating"] / len(strain_match_objectlst)
     return new_obj
 
+def combine_otreeba_data(curr_strainobject, strain_match_lst):
+    print(curr_strainobject)
+    print(strain_match_lst)
+    print('_____________________________')
+    # strain_match_objectlst = []
+    # # find new strain object and add to lst
+    # for strain_match in strain_match_lst:
+    #     new_strain = find_strain_obj_in_lst(strain_match, info_dict)
+    #     if new_strain is None:
+    #         continue
+    #     else:
+    #         strain_match_objectlst.append(new_strain)
+    #
+    # strain_match_objectlst.append(curr_strainobject)
+    # new_obj = {}
 
-if __name__ == "__main__":
-    allbud_data = {}
+    # for m in strain_match_objectlst:
+    #     if "name" in new_obj.keys():
+    #         new_obj["name"] += ", " + m["name"]
+    #     else:
+    #         new_obj["name"] = m["name"]
+    #
+    #     if "description" in new_obj.keys():
+    #         new_obj["description"] += "/n" + m["description"]
+    #     else:
+    #         new_obj["description"] = m["description"]
+    #     if "rating" in new_obj.keys():
+    #         new_obj["rating"] += float(m["rating"])
+    #     else:
+    #         new_obj["rating"] = float(m["rating"])
+    #     if "positive" in new_obj.keys():
+    #         curr_pos = new_obj["positive"]
+    #         new_pos = m["positive"]
+    #         new_obj["positive"] = list(set(curr_pos + new_pos))
+    #     else:
+    #         new_obj["positive"] = m["positive"]
+    #     if "flavor" in new_obj.keys():
+    #         curr_flavor = new_obj["flavor"]
+    #         new_flavor = m["flavor"]
+    #         new_obj["flavor"] = list(set(curr_flavor + new_flavor))
+    #     else:
+    #         new_obj["flavor"] = m["flavor"]
+    #     if "aroma" in new_obj.keys():
+    #         curr_aroma = new_obj["aroma"]
+    #         new_aroma = m["aroma"]
+    #         new_obj["aroma"] = list(set(curr_aroma + new_aroma))
+    #     else:
+    #         new_obj["aroma"] = m["aroma"]
+    #     if "medical" in new_obj.keys():
+    #         curr_medical = new_obj["medical"]
+    #         new_medical = m["medical"]
+    #         new_obj["medical"] = list(set(curr_medical + new_medical))
+    #     else:
+    #         new_obj["medical"] = m["medical"]
+    #     if "percentages" in new_obj.keys():
+    #         curr_percentages = new_obj["percentages"]
+    #         new_percentages = m["percentages"]
+    #         new_obj["percentages"] = {**new_percentages, **curr_percentages}
+    #     else:
+    #         new_obj["percentages"] = m["percentages"]
+    # new_obj["rating"] = new_obj["rating"] / len(strain_match_objectlst)
+    # return new_obj
+
+
+def remove_dupes_otreeba():
     otreeba_strains_data = []
-    otreeba_conditions_data = []
-    otreeba_studies_data = []
-    leafly_data = {}
-
-
-    with open('../data/allbud_output.json', encoding="utf8") as f:
-        allbud_data = json.load(f)
+    # otreeba_conditions_data = []
+    # otreeba_studies_data = []
 
     with open('../data/strains.json', encoding="utf8") as f:
         otreeba_strains_data = json.load(f)['data']
 
-    with open('../data/conditions.json', encoding="utf8") as f:
-        otreeba_conditions_data = json.load(f)['data']
+    # with open('../data/conditions.json', encoding="utf8") as f:
+    #     otreeba_conditions_data = json.load(f)['data']
+    #
+    # with open('../data/studies.json', encoding="utf8") as f:
+    #     otreeba_studies_data = json.load(f)['data']
 
-    with open('../data/studies.json', encoding="utf8") as f:
-        otreeba_studies_data = json.load(f)['data']
+    otreeba_data = []
+    done_lst = []
 
+    for otreeba_strain1 in otreeba_strains_data:
+        name_otreeba_strain1 = otreeba_strain1["name"].lower()
+        if name_otreeba_strain1 in done_lst:
+            continue
+
+        curr_lst = []
+        for otreeba_strain2 in otreeba_strains_data:
+            name_otreeba_strain2 = otreeba_strain2["name"].lower()
+            if name_otreeba_strain1 in done_lst or name_otreeba_strain1 == name_otreeba_strain2:
+                continue
+
+            curr_score = editDistDP(name_otreeba_strain1, name_otreeba_strain2, \
+                len(name_otreeba_strain1), len(name_otreeba_strain2) )
+
+            #we only care if edit dist is below a threshold
+            if curr_score <= 3:
+                curr_tup = (otreeba_strain2, curr_score)
+                curr_lst.append(curr_tup)
+                done_lst.append(name_otreeba_strain2)
+
+        #sort list and process the matches
+        curr_lst.sort(key=lambda tup: tup[1])
+        if curr_lst != []:
+            strain_matches = [tup[0] for tup in curr_lst]
+            new_strain = combine_otreeba_data(otreeba_strain1, strain_matches)
+            otreeba_data.append(new_strain)
+        else:
+            otreeba_data.append(otreeba_strain1)
+        done_lst.append(otreeba_strain1["name"])
+
+
+def remove_dupes_allbud():
+    allbud_data = {}
+    with open('../data/allbud_output.json', encoding="utf8") as f:
+        allbud_data = json.load(f)
 
     new_allbud_data = []
     done_lst = [] #holds names of strains that we want to skip since they are duplicates
@@ -164,7 +259,7 @@ if __name__ == "__main__":
                         new_match = match.replace(",", "")
                         final_match_lst.append(new_match)
 
-                info_return = combine_data(curr_strain_data, final_match_lst, allbud_data)
+                info_return = combine_allbud_data(curr_strain_data, final_match_lst, allbud_data)
                 done_lst = done_lst + final_match_lst
                 new_allbud_data.append(info_return)
 
@@ -178,9 +273,9 @@ if __name__ == "__main__":
 
 
 
-
-
-
+if __name__ == "__main__":
+    # remove_dupes_allbud()
+    remove_dupes_otreeba()
 
 
         # curr_lst = []
