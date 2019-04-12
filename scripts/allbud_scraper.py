@@ -18,8 +18,9 @@ def do_scrape():
     for letter in alphabet:
         results_acc = scrape_for_letter(letter, results_acc)
 
-        with open('../data/' + 'allbud_output.json', 'w') as outfile:
-            json.dump(results_acc, outfile)
+    with open('../data/allbud_output.json', 'w') as outfile:
+        json.dump(results_acc, outfile)
+
 
 def scrape_for_letter(letter, results_dict):
     baseurl = 'https://www.allbud.com/marijuana-strains/search?sort=alphabet&letter='
@@ -100,6 +101,20 @@ def scrape_for_letter(letter, results_dict):
 
     return results_dict
 
+def change_to_list_format():
+    allbud_data = {}
+    new_allbud_data = []
+    with open('../data/allbud_output.json', encoding="utf8") as f:
+        allbud_data = json.load(f)
+
+    for key in allbud_data.keys():
+        val = allbud_data[key]
+        val["name"] = key
+        new_allbud_data.append(val)
+
+    with open('../data/allbud_output.json', 'w') as outfile:
+        json.dump(new_allbud_data, outfile)
 
 if __name__ == "__main__":
     do_scrape()
+    change_to_list_format()

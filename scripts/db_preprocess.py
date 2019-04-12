@@ -34,48 +34,67 @@ def editDistDP(str1, str2, m, n):
 
     return dp[m][n]
 
-def combine_data(curr_strain, strain_match_lst, info_dict):
-    curr_strainobject = info_dict[curr_strain]
+
+def find_strain_obj_in_lst(name, lst):
+    '''
+        return object with key "name" == input name
+        otherwise return None
+    '''
+    answer = {}
+    for obj in lst:
+        if obj["name"] == name:
+            return obj
+    return None
+
+def combine_data(curr_strainobject, strain_match_lst, info_dict):
     strain_match_objectlst = []
+    # find new strain object and add to lst
     for strain_match in strain_match_lst:
-        strain_match_objectlst.append(info_dict[strain_match])
+        new_strain = find_strain_obj_in_lst(strain_match, info_dict)
+        if new_strain is None:
+            continue
+        else:
+            strain_match_objectlst.append(new_strain)
+
     strain_match_objectlst.append(curr_strainobject)
     new_obj = {}
+
     for m in strain_match_objectlst:
         if "name" in new_obj.keys():
             new_obj["name"] += ", " + m["name"]
         else:
             new_obj["name"] = m["name"]
+
         if "description" in new_obj.keys():
             new_obj["description"] += "/n" + m["description"]
         else:
             new_obj["description"] = m["description"]
         if "rating" in new_obj.keys():
-            new_obj["rating"] += m["rating"]
+            new_obj["rating"] += float(m["rating"])
         else:
-            new_obj["rating"] = m["rating"]
+            new_obj["rating"] = float(m["rating"])
         if "positive" in new_obj.keys():
             curr_pos = new_obj["positive"]
             new_pos = m["positive"]
-            new_obj["positive"] = set(curr_pos + new_post)
+            new_obj["positive"] = list(set(curr_pos + new_pos))
         else:
             new_obj["positive"] = m["positive"]
         if "flavor" in new_obj.keys():
             curr_flavor = new_obj["flavor"]
             new_flavor = m["flavor"]
-            new_obj["flavor"] = set(curr_flavor + new_flavor)
+            new_obj["flavor"] = list(set(curr_flavor + new_flavor))
         else:
             new_obj["flavor"] = m["flavor"]
         if "aroma" in new_obj.keys():
             curr_aroma = new_obj["aroma"]
             new_aroma = m["aroma"]
-            new_obj["aroma"] = set(curr_aroma + new_aroma)
+            new_obj["aroma"] = list(set(curr_aroma + new_aroma))
         else:
             new_obj["aroma"] = m["aroma"]
         if "medical" in new_obj.keys():
             curr_medical = new_obj["medical"]
             new_medical = m["medical"]
-            new_obj["medical"] = set(curr_medical + new_medical)
+            new_obj["medical"] = list(set(curr_medical + new_medical))
         else:
             new_obj["medical"] = m["medical"]
         if "percentages" in new_obj.keys():
@@ -85,14 +104,7 @@ def combine_data(curr_strain, strain_match_lst, info_dict):
         else:
             new_obj["percentages"] = m["percentages"]
     new_obj["rating"] = new_obj["rating"] / len(strain_match_objectlst)
-    return new_obj["name"], new_obj
-
-
-
-
-
-
-
+    return new_obj
 
 
 if __name__ == "__main__":
@@ -115,15 +127,17 @@ if __name__ == "__main__":
     with open('../data/studies.json', encoding="utf8") as f:
         otreeba_studies_data = json.load(f)['data']
 
-    
 
-    new_allbud_dict = {}
-    done_lst = []
-    for allbud_strain in allbud_data.keys():
-        if allbud_strain in done_lst:
+    new_allbud_data = []
+    done_lst = [] #holds names of strains that we want to skip since they are duplicates
+    counter = 0
+
+    for curr_strain_data in allbud_data:
+        counter += 1
+        if curr_strain_data['name'] in done_lst:
             continue
         else:
-            curr_strain_data = allbud_data[allbud_strain]
+            # curr_strain_data = allbud_data[allbud_strain]
             curr_description = curr_strain_data['description']
             tokenize_lst = sent_tokenize(curr_description)
             needed_sentence = ""
@@ -132,18 +146,36 @@ if __name__ == "__main__":
                     needed_sentence = sentence
                     break
             if needed_sentence == "":
-                new_allbud_dict[allbud_strain] = allbud_data[allbud_strain]
+                new_allbud_data.append(curr_strain_data)
+                done_lst.append(curr_strain_data['name'])
             else:
-                # matches=re.findall(r'“(.*?)”',needed_sentence)
                 matches=re.findall(r'\"(.*?)\"',needed_sentence)
                 final_match_lst = []
+
+                '''
+                    TODO: one issue is that not all (but most), cases of "known as"
+                        occur with "[STRAIN NAME]" but a few don't have the quotations
+                '''
+                # print(needed_sentence)
+                # print(matches)
                 for match in matches:
                     new_match = match
                     if "," in match:
                         new_match = match.replace(",", "")
                         final_match_lst.append(new_match)
-                info_return = combine_data(allbud_strain, final_match_lst, allbud_data)
-                new_allbud_dict[info_return[0]] = info_return[1]
+
+                info_return = combine_data(curr_strain_data, final_match_lst, allbud_data)
+                done_lst = done_lst + final_match_lst
+                new_allbud_data.append(info_return)
+
+        if counter % 1000 == 0:
+            print(str(counter/len(allbud_data) * 100) + "% done")
+
+    print(len(allbud_data))
+    print(len(new_allbud_data))
+    with open('../data/cleaned_allbud.json', 'w') as outfile:
+        json.dump(new_allbud_data, outfile)
+
 
 
 
