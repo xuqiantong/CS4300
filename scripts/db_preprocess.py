@@ -61,6 +61,66 @@ def combine_allbud_data(curr_strainobject, strain_match_lst, info_dict):
 
     for m in strain_match_objectlst:
         if "name" in new_obj.keys():
+            new_obj["name"] += m["name"]
+        else:
+            new_obj["name"] = [m["name"]]
+
+        if "description" in new_obj.keys():
+            new_obj["description"] += "/n" + m["description"]
+        else:
+            new_obj["description"] = m["description"]
+        if "rating" in new_obj.keys():
+            new_obj["rating"] += float(m["rating"])
+        else:
+            new_obj["rating"] = float(m["rating"])
+        if "positive" in new_obj.keys():
+            curr_pos = new_obj["positive"]
+            new_pos = m["positive"]
+            new_obj["positive"] = list(set(curr_pos + new_pos))
+        else:
+            new_obj["positive"] = m["positive"]
+        if "flavor" in new_obj.keys():
+            curr_flavor = new_obj["flavor"]
+            new_flavor = m["flavor"]
+            new_obj["flavor"] = list(set(curr_flavor + new_flavor))
+        else:
+            new_obj["flavor"] = m["flavor"]
+        if "aroma" in new_obj.keys():
+            curr_aroma = new_obj["aroma"]
+            new_aroma = m["aroma"]
+            new_obj["aroma"] = list(set(curr_aroma + new_aroma))
+        else:
+            new_obj["aroma"] = m["aroma"]
+        if "medical" in new_obj.keys():
+            curr_medical = new_obj["medical"]
+            new_medical = m["medical"]
+            new_obj["medical"] = list(set(curr_medical + new_medical))
+        else:
+            new_obj["medical"] = m["medical"]
+        if "percentages" in new_obj.keys():
+            curr_percentages = new_obj["percentages"]
+            new_percentages = m["percentages"]
+            new_obj["percentages"] = {**new_percentages, **curr_percentages}
+        else:
+            new_obj["percentages"] = m["percentages"]
+    new_obj["rating"] = new_obj["rating"] / len(strain_match_objectlst)
+    return new_obj
+
+def combine_otreeba_data(curr_strainobject, strain_match_lst):
+    strain_match_objectlst = []
+    # find new strain object and add to lst
+    for strain_match in strain_match_lst:
+        new_strain = find_strain_obj_in_lst(strain_match, info_dict)
+        if new_strain is None:
+            continue
+        else:
+            strain_match_objectlst.append(new_strain)
+
+    strain_match_objectlst.append(curr_strainobject)
+    new_obj = {}
+
+    for m in strain_match_objectlst:
+        if "name" in new_obj.keys():
             new_obj["name"] += ", " + m["name"]
         else:
             new_obj["name"] = m["name"]
@@ -106,83 +166,12 @@ def combine_allbud_data(curr_strainobject, strain_match_lst, info_dict):
     new_obj["rating"] = new_obj["rating"] / len(strain_match_objectlst)
     return new_obj
 
-def combine_otreeba_data(curr_strainobject, strain_match_lst):
-    print(curr_strainobject)
-    print(strain_match_lst)
-    print('_____________________________')
-    # strain_match_objectlst = []
-    # # find new strain object and add to lst
-    # for strain_match in strain_match_lst:
-    #     new_strain = find_strain_obj_in_lst(strain_match, info_dict)
-    #     if new_strain is None:
-    #         continue
-    #     else:
-    #         strain_match_objectlst.append(new_strain)
-    #
-    # strain_match_objectlst.append(curr_strainobject)
-    # new_obj = {}
-
-    # for m in strain_match_objectlst:
-    #     if "name" in new_obj.keys():
-    #         new_obj["name"] += ", " + m["name"]
-    #     else:
-    #         new_obj["name"] = m["name"]
-    #
-    #     if "description" in new_obj.keys():
-    #         new_obj["description"] += "/n" + m["description"]
-    #     else:
-    #         new_obj["description"] = m["description"]
-    #     if "rating" in new_obj.keys():
-    #         new_obj["rating"] += float(m["rating"])
-    #     else:
-    #         new_obj["rating"] = float(m["rating"])
-    #     if "positive" in new_obj.keys():
-    #         curr_pos = new_obj["positive"]
-    #         new_pos = m["positive"]
-    #         new_obj["positive"] = list(set(curr_pos + new_pos))
-    #     else:
-    #         new_obj["positive"] = m["positive"]
-    #     if "flavor" in new_obj.keys():
-    #         curr_flavor = new_obj["flavor"]
-    #         new_flavor = m["flavor"]
-    #         new_obj["flavor"] = list(set(curr_flavor + new_flavor))
-    #     else:
-    #         new_obj["flavor"] = m["flavor"]
-    #     if "aroma" in new_obj.keys():
-    #         curr_aroma = new_obj["aroma"]
-    #         new_aroma = m["aroma"]
-    #         new_obj["aroma"] = list(set(curr_aroma + new_aroma))
-    #     else:
-    #         new_obj["aroma"] = m["aroma"]
-    #     if "medical" in new_obj.keys():
-    #         curr_medical = new_obj["medical"]
-    #         new_medical = m["medical"]
-    #         new_obj["medical"] = list(set(curr_medical + new_medical))
-    #     else:
-    #         new_obj["medical"] = m["medical"]
-    #     if "percentages" in new_obj.keys():
-    #         curr_percentages = new_obj["percentages"]
-    #         new_percentages = m["percentages"]
-    #         new_obj["percentages"] = {**new_percentages, **curr_percentages}
-    #     else:
-    #         new_obj["percentages"] = m["percentages"]
-    # new_obj["rating"] = new_obj["rating"] / len(strain_match_objectlst)
-    # return new_obj
-
 
 def remove_dupes_otreeba():
     otreeba_strains_data = []
-    # otreeba_conditions_data = []
-    # otreeba_studies_data = []
 
     with open('../data/strains.json', encoding="utf8") as f:
         otreeba_strains_data = json.load(f)['data']
-
-    # with open('../data/conditions.json', encoding="utf8") as f:
-    #     otreeba_conditions_data = json.load(f)['data']
-    #
-    # with open('../data/studies.json', encoding="utf8") as f:
-    #     otreeba_studies_data = json.load(f)['data']
 
     otreeba_data = []
     done_lst = []
@@ -272,11 +261,33 @@ def remove_dupes_allbud():
         json.dump(new_allbud_data, outfile)
 
 
+def combine_leafly_allbud_dicts():
+    with open('../data/leafly_output.json', encoding="utf8") as f:
+        leafly_strains_data = json.load(f)
+    with open('../data/cleaned_allbud.json', encoding="utf8") as f:
+        allbud_strains_data = json.load(f)
+
+    # it has an empty strain
+    del leafly_strains_data['']
+
+    full_data = []
+    for strain1_name in leafly_strains_data.keys():
+        found_match = False
+        strain1 = leafly_strains_data[strain1_name]
+        for strain2 in allbud_strains_data:
+            strain2_names = allbud_strains_data["name"]
+
+            #if within a certain edit distance, we combine, otherwise we throw out
+            for name in strain2_names:
+                found_match = True
+
+
+    print(leafly_strains_data['Godzilla Blood'])
 
 if __name__ == "__main__":
     # remove_dupes_allbud()
-    remove_dupes_otreeba()
-
+    # remove_dupes_otreeba()
+    combine_leafly_allbud_dicts()
 
         # curr_lst = []
         # for allbud_strain1 in allbud_data.keys():
