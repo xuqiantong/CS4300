@@ -1,6 +1,7 @@
 import json
 from nltk.tokenize import sent_tokenize
 import re
+from constants import *
 
 def editDistDP(str1, str2, m, n):
     # Create a table to store results of subproblems
@@ -61,7 +62,7 @@ def combine_allbud_data(curr_strainobject, strain_match_lst, info_dict):
 
     for m in strain_match_objectlst:
         if "name" in new_obj.keys():
-            new_obj["name"] += m["name"]
+            new_obj["name"] += [m["name"]]
         else:
             new_obj["name"] = [m["name"]]
 
@@ -255,13 +256,29 @@ def remove_dupes_allbud():
         if counter % 1000 == 0:
             print(str(counter/len(allbud_data) * 100) + "% done")
 
-    print(len(allbud_data))
-    print(len(new_allbud_data))
     with open('../data/cleaned_allbud.json', 'w') as outfile:
         json.dump(new_allbud_data, outfile)
 
 
+def combine_leafly_allbud_strain(leafly_strain, allbud_strain):
+    '''
+        combine a specific instance of an allbud strain and a leafly strain
+    '''
+    # print('leafly')
+    # print(leafly_strain.keys())
+    # print('allbud')
+    # print(allbud_strain.keys())
+    pass
+
+
+def clean_name_string(name):
+    return name.lower().replace(" ", "")
+
+
 def combine_leafly_allbud_dicts():
+    '''
+        combine allbud dictionary and leafly dictionary
+    '''
     with open('../data/leafly_output.json', encoding="utf8") as f:
         leafly_strains_data = json.load(f)
     with open('../data/cleaned_allbud.json', encoding="utf8") as f:
@@ -271,18 +288,38 @@ def combine_leafly_allbud_dicts():
     del leafly_strains_data['']
 
     full_data = []
+    counter = 0
+    counter2 = 0
     for strain1_name in leafly_strains_data.keys():
-        found_match = False
         strain1 = leafly_strains_data[strain1_name]
+        strain1_name = clean_name_string(strain1_name)
+        # print(strain1_name)
+        counter2 += 1
+        if counter2 % 20 == 0:
+            print(counter, counter2)
         for strain2 in allbud_strains_data:
-            strain2_names = allbud_strains_data["name"]
+            strain2_names = strain2["name"]
 
             #if within a certain edit distance, we combine, otherwise we throw out
-            for name in strain2_names:
-                found_match = True
+            for strain2_name in strain2_names:
+                strain2_name = clean_name_string(strain2_name)
+                if editDistDP(strain1_name, strain2_name, len(strain1_name), len(strain2_name)) <= EDIT_DIST_THRESHOLD:
+                    print(strain1_name, strain2_name)
+                    counter += 1
+                    combined_data = combine_leafly_allbud_strain(strain1, strain2)
+                    full_data.append(combined_data)
+                    break
+            else:
+                # if we didn't find a match
+                continue
+            break
 
 
-    print(leafly_strains_data['Godzilla Blood'])
+
+
+    with open('../data/leafly_allbud.json', 'w') as outfile:
+        json.dump(full_data, outfile)
+
 
 if __name__ == "__main__":
     # remove_dupes_allbud()
