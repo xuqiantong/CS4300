@@ -306,8 +306,12 @@ def combine_otri_leafly():
         leafly_data = json.load(f)
     with open('../data/strains.json', encoding="utf8") as d:
         otri_data = json.load(d)
+    i = 0
     for l_data in leafly_data:
-        print(l_data)
+        if l_data != None:
+            i +=1
+            print(l_data['name'])
+    print(i)
         # for o_data in otri_data.keys():
 
 
