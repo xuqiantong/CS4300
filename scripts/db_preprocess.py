@@ -107,106 +107,6 @@ def combine_allbud_data(curr_strainobject, strain_match_lst, info_dict):
     new_obj["rating"] = new_obj["rating"] / len(strain_match_objectlst)
     return new_obj
 
-def combine_otreeba_data(curr_strainobject, strain_match_lst):
-    strain_match_objectlst = []
-    # find new strain object and add to lst
-    for strain_match in strain_match_lst:
-        new_strain = find_strain_obj_in_lst(strain_match, info_dict)
-        if new_strain is None:
-            continue
-        else:
-            strain_match_objectlst.append(new_strain)
-
-    strain_match_objectlst.append(curr_strainobject)
-    new_obj = {}
-
-    for m in strain_match_objectlst:
-        if "name" in new_obj.keys():
-            new_obj["name"] += ", " + m["name"]
-        else:
-            new_obj["name"] = m["name"]
-
-        if "description" in new_obj.keys():
-            new_obj["description"] += "/n" + m["description"]
-        else:
-            new_obj["description"] = m["description"]
-        if "rating" in new_obj.keys():
-            new_obj["rating"] += float(m["rating"])
-        else:
-            new_obj["rating"] = float(m["rating"])
-        if "positive" in new_obj.keys():
-            curr_pos = new_obj["positive"]
-            new_pos = m["positive"]
-            new_obj["positive"] = list(set(curr_pos + new_pos))
-        else:
-            new_obj["positive"] = m["positive"]
-        if "flavor" in new_obj.keys():
-            curr_flavor = new_obj["flavor"]
-            new_flavor = m["flavor"]
-            new_obj["flavor"] = list(set(curr_flavor + new_flavor))
-        else:
-            new_obj["flavor"] = m["flavor"]
-        if "aroma" in new_obj.keys():
-            curr_aroma = new_obj["aroma"]
-            new_aroma = m["aroma"]
-            new_obj["aroma"] = list(set(curr_aroma + new_aroma))
-        else:
-            new_obj["aroma"] = m["aroma"]
-        if "medical" in new_obj.keys():
-            curr_medical = new_obj["medical"]
-            new_medical = m["medical"]
-            new_obj["medical"] = list(set(curr_medical + new_medical))
-        else:
-            new_obj["medical"] = m["medical"]
-        if "percentages" in new_obj.keys():
-            curr_percentages = new_obj["percentages"]
-            new_percentages = m["percentages"]
-            new_obj["percentages"] = {**new_percentages, **curr_percentages}
-        else:
-            new_obj["percentages"] = m["percentages"]
-    new_obj["rating"] = new_obj["rating"] / len(strain_match_objectlst)
-    return new_obj
-
-
-def remove_dupes_otreeba():
-    otreeba_strains_data = []
-
-    with open('../data/strains.json', encoding="utf8") as f:
-        otreeba_strains_data = json.load(f)['data']
-
-    otreeba_data = []
-    done_lst = []
-
-    for otreeba_strain1 in otreeba_strains_data:
-        name_otreeba_strain1 = otreeba_strain1["name"].lower()
-        if name_otreeba_strain1 in done_lst:
-            continue
-
-        curr_lst = []
-        for otreeba_strain2 in otreeba_strains_data:
-            name_otreeba_strain2 = otreeba_strain2["name"].lower()
-            if name_otreeba_strain1 in done_lst or name_otreeba_strain1 == name_otreeba_strain2:
-                continue
-
-            curr_score = editDistDP(name_otreeba_strain1, name_otreeba_strain2, \
-                len(name_otreeba_strain1), len(name_otreeba_strain2) )
-
-            #we only care if edit dist is below a threshold
-            if curr_score <= 3:
-                curr_tup = (otreeba_strain2, curr_score)
-                curr_lst.append(curr_tup)
-                done_lst.append(name_otreeba_strain2)
-
-        #sort list and process the matches
-        curr_lst.sort(key=lambda tup: tup[1])
-        if curr_lst != []:
-            strain_matches = [tup[0] for tup in curr_lst]
-            new_strain = combine_otreeba_data(otreeba_strain1, strain_matches)
-            otreeba_data.append(new_strain)
-        else:
-            otreeba_data.append(otreeba_strain1)
-        done_lst.append(otreeba_strain1["name"])
-
 
 def remove_dupes_allbud():
     allbud_data = {}
@@ -230,19 +130,21 @@ def remove_dupes_allbud():
                 if "known as" in sentence:
                     needed_sentence = sentence
                     break
-            if needed_sentence == "":
-                new_allbud_data.append(curr_strain_data)
-                done_lst.append(curr_strain_data['name'])
-            else:
+            if "\"" in needed_sentence:
                 matches=re.findall(r'\"(.*?)\"',needed_sentence)
-                final_match_lst = []
-
-                '''
-                    TODO: one issue is that not all (but most), cases of "known as"
-                        occur with "[STRAIN NAME]" but a few don't have the quotations
-                '''
+            else:
                 # print(needed_sentence)
-                # print(matches)
+                curr_phrase = re.findall(r'(known as(\s\S+)+[,)])', needed_sentence)
+                if len(curr_phrase) == 0:
+                    new_leafly_data.append(curr_strain_data)
+                    done_lst.append(curr_strain_name)
+                else:
+                    # print(curr_phrase[0][0])
+                    matches1 = re.findall(r'([A-Z]\w+\s)*([A-Z]\w+)+', curr_phrase[0][0])
+                    for match in matches1:
+                        curr_name = match[0] + match[1]
+                        matches.append(curr_name)
+
                 for match in matches:
                     new_match = match
                     if "," in match:
@@ -321,10 +223,105 @@ def combine_leafly_allbud_dicts():
         json.dump(full_data, outfile)
 
 
+def combine_leafly_data(curr_strainobject, strain_match_lst,):
+    pass
+
+
+
+
+
+    #     if counter % 1000 == 0:
+    #         print(str(counter/len(allbud_data) * 100) + "% done")
+    #
+    # with open('../data/cleaned_allbud.json', 'w') as outfile:
+    #     json.dump(new_allbud_data, outfile)
+
+
+
+def remove_dupes_leafly():
+    leafly_data = {}
+    with open('../data/leafly_output.json', encoding="utf8") as f:
+        leafly_data = json.load(f)
+
+    del leafly_data['']
+
+    new_leafly_data = []
+    done_lst = [] #holds names of strains that we want to skip since they are duplicates
+    counter = 0
+    for curr_strain_name in leafly_data.keys():
+        counter += 1
+        curr_strain_data = leafly_data[curr_strain_name]
+        curr_strain_data['name'] = curr_strain_name
+        if curr_strain_name in done_lst:
+            continue
+        else:
+            # curr_strain_data = allbud_data[allbud_strain]
+            curr_description = curr_strain_data['description']
+            tokenize_lst = sent_tokenize(curr_description)
+            needed_sentence = ""
+            for sentence in tokenize_lst:
+                if "known as" in sentence:
+                    needed_sentence = sentence.replace('\u201c','\"'). \
+                        replace('\u201d','\"').replace('\u2019','\''). \
+                        replace('\u2013','-')
+                    break
+            if needed_sentence == "":
+                new_leafly_data.append(curr_strain_data)
+                done_lst.append(curr_strain_name)
+            else:
+                final_match_lst = []
+                matches = []
+                if "\"" in needed_sentence:
+                    matches=re.findall(r'\"(.*?)\"',needed_sentence)
+                else:
+                    # print(needed_sentence)
+                    curr_phrase = re.findall(r'(known as(\s\S+)+[,)])', needed_sentence)
+                    if len(curr_phrase) == 0:
+                        new_leafly_data.append(curr_strain_data)
+                        done_lst.append(curr_strain_name)
+                    else:
+                        # print(curr_phrase[0][0])
+                        matches1 = re.findall(r'([A-Z]\w+\s)*([A-Z]\w+)+', curr_phrase[0][0])
+                        for match in matches1:
+                            curr_name = match[0] + match[1]
+                            matches.append(curr_name)
+
+                for match in matches:
+                    new_match = match
+                    if "," in match:
+                        new_match = match.replace(",", "")
+                        final_match_lst.append(new_match)
+
+                info_return = combine_leafly_data(curr_strain_data, final_match_lst)
+                done_lst = done_lst + final_match_lst
+                new_leafly_data.append(info_return)
+
+    with open('../data/cleaned_leafly.json', 'w') as outfile:
+        json.dump(new_leafly_data, outfile)
+
+def combine_otri_leafly():
+    leafly_data = {}
+    otri_data = {}
+    with open('../data/cleaned_leafly.json', encoding="utf8") as f:
+        leafly_data = json.load(f)
+    with open('../data/strains.json', encoding="utf8") as d:
+        otri_data = json.load(d)
+    for l_data in leafly_data:
+        print(l_data)
+        # for o_data in otri_data.keys():
+
+
+
+
+
+
+
 if __name__ == "__main__":
     # remove_dupes_allbud()
-    # remove_dupes_otreeba()
-    combine_leafly_allbud_dicts()
+    # remove_dupes_leafly()
+    # combine_leafly_allbud_dicts()
+    combine_otri_leafly()
+
 
         # curr_lst = []
         # for allbud_strain1 in allbud_data.keys():
