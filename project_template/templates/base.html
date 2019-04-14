@@ -1,37 +1,53 @@
 <html>
     <head>
-        <link rel="stylesheet" href="/static/bootstrap.min.css">
-        <link rel="stylesheet" href="/static/main.css">
+
+        <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/js/common.js"></script>
+
+        {% block headers %}
+
+        {% endblock headers %}
+
+        <link rel="stylesheet" href="/static/style/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/style/jquery-ui.min.css">
+        <link rel="stylesheet" href="/static/style/main.css">
         <link rel="shortcut icon" type="image/png" href="/static/images/favicon.png"/>
-        <title>Greener</title>
+
+        <title>MariWanna</title>
     </head>
     
     <body>
         <!-- TODO: Please change lines 10 and 11 according to your actual project name and student names-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-            <a class="navbar-brand" href="/">Greener</a>
+            <a class="navbar-brand" href="/">
+                <img src="/static/images/favicon.png" class="d-inline-block align-top mr-1" alt="">
+                MariWanna
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Search</a>
+                        <a class="nav-link" href="/search-similar">Search Similar</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
+                        <a class="nav-link" href="/search-custom">Custom Search</a>
                     </li>
                 </ul>
             </div>
         </nav>
 
+        <div id="mainContent">
         {% block content %}
 
         {% endblock content %}
-        
+        </div>
     </body>
-    <footer>
-        <div class="d-flex justify-content-center p-2">
+    <footer class="bg-dark text-muted mt-3 p-2">
+        <div class="d-flex justify-content-center p-2 mt-3">
             <div class="d-flex flex-column text-center">
                 <p>CS4300: Cannabis Recommendation System</p>
                 <p>Frederick Kauber (fdk9), Jeffrey Liu (jl2964), Noel Picinich (nmp53), Nicole Kwok (njk72), and Nathan Bala (nb378)</p>
@@ -39,4 +55,5 @@
             
         </div>
     </footer>
+    
 </html>

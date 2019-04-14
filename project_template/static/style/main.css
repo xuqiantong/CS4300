@@ -1,0 +1,82 @@
+body {
+    background-image: url('../images/background.jpg');
+    background-position: center;
+    background-size: cover;
+    height: 100%;
+}
+@media (min-width: 1200px) {
+.container {
+    max-width: 970px;
+}
+}
+@media (min-width:400px){
+.global-search {
+padding: 20px 0;
+text-align:center;
+}
+footer {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+ }
+.global-search {
+    text-align:center;
+    padding:10px;
+}
+.global-search .form-control {
+    width:500px;
+}
+#similarSearch {
+    width: 70%;
+}
+#selectEffects input {
+    width: 60%;
+}
+#allFlavors {
+    height: 50px;
+    overflow: scroll;
+}
+#allEffects {
+    height: 75px;
+    overflow: scroll;
+}
+
+
+.tag {
+    height: 30px;
+}
+
+.remove-btn {
+    background-color: white;
+    color: red;
+    font-size: 11px;
+    border-radius: 15px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 2px;
+    /* margin-bottom: px; */
+    margin-left: 7px;
+}
+
+.remove-btn:hover {
+    background-color: red;
+    color: white;
+    cursor: pointer;
+}
+/* .global-search * {
+display:inline-block;
+margin-bottom:0;
+}
+}
+.topcorner{
+position:absolute;
+top:2%;
+right:2%;
+}
+.btn{
+background-color: #4285F4;
+border: none
+}
+.step-links a{
+color: #4285F4;
+} */

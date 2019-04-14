@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center">
+    <form class="p-5 mt-5 shadow rounded w-50 bg-light" action="/similar-search/" method="post">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Similar Strains</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+{% endblock content %}

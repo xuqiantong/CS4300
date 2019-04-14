@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block headers %}
+<script type="text/javascript" src="/static/js/search_custom.js"></script>
+{% endblock headers %}
+
+{% block content %}
+<div class="container d-flex justify-content-center">
+    <form id="similarSearch" class="p-5 mt-4 shadow rounded bg-light" action="/similar-search/" method="post">
+        <h2 class="pb-3">Custom Strain Search</h2>
+        <div class="form-group d-flex flex-column">
+            <div id="inputEffects" class="d-flex flex-column">
+                <div class="d-flex align-items-center justify-content-between pb-2">
+                    <label class="m-0 pr-3" for="medical-effects">Medical Effects:</label>
+                    <input type="email" class="form-control w-75" id="medical-effects" placeholder="eg. Anxiety">
+                </div>
+                <div class="d-flex align-items-center justify-content-between pb-2">
+                    <label for="desired-effects" class="m-0">Desired Effects:</label>
+                    <input type="email" class="form-control w-75" id="desired-effects" placeholder="eg. Euphoria">
+                </div>
+                <div class="d-flex align-items-center justify-content-between pb-2">
+                    <label for="undesired-effects" class="m-0">Undesired Effects:</label>
+                    <input type="email" class="form-control w-75" id="undesired-effects" placeholder="eg. Dry Eyes">
+                </div>
+            </div>
+            
+            <div id="allEffects" class="d-inline-flex flex-wrap border rounded bg-white p-1 mb-2"></div>
+
+            <label for="strengthRange">Strength: <span id="strengthValue">50</span>%</label>
+            <!-- <div class="d-flex pb-2"><span class="m-2">MIN</span><input type="range" class="form-control-range" id="strengthRange"><span class="m-2">MAX</span></div> -->
+            <div id="strengthRange" class="mb-3"></div>
+            <div class="d-flex align-items-center justify-content-between pb-2">
+                <label class="m-0 pr-3" for="flavors">Flavors:</label>
+                <input type="email" class="form-control w-75" id="flavors" placeholder="eg. Cherry">
+            </div>
+
+            <div id="allFlavors" class="d-inline-flex flex-wrap border rounded bg-white p-1 mb-2"></div>
+            <!-- <label>Flavors/Aromas:</label> -->
+            <!-- <div class="d-flex flex-column pb-3">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                    <label class="form-check-label" for="inlineCheckbox1">Cherry</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                    <label class="form-check-label" for="inlineCheckbox2">Blueberry</label>
+                </div>
+            </div> -->
+
+            <!-- <label>Aromas:</label>
+            <div class="d-flex flex-column pb-2">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                    <label class="form-check-label" for="inlineCheckbox1">Cherry</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                    <label class="form-check-label" for="inlineCheckbox2">Blueberry</label>
+                </div>
+            </div> -->
+            
+            <div class="d-flex justify-content-between align-items-center pb-3">
+                <label class="pr-2 m-0" for="city">City:</label>
+                <input type="email" class="form-control mr-3" id="city" placeholder="Boca Raton">
+                <label class="pr-2 m-0" for="state">State:</label>
+                <input type="email" class="form-control w-25" id="state" placeholder="FL">
+            </div>
+
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-dark">Submit</button>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

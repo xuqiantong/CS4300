@@ -7,32 +7,39 @@ from django.template import loader
 from .forms import SearchForm
 
 # Create your views here.
-def search(request):
-    query = request.GET.get('search')
-    if not query:
-        output_message = ''
-        data = []
-    else:
-        output_message = query
-        query_result_list = range(15)
-        paginator = Paginator(query_result_list, 10)
-        page = request.GET.get('page')
-        try:
-            data = paginator.page(page)
-        except PageNotAnInteger:
-            data = paginator.page(1)
-        except EmptyPage:
-            data = paginator.page(paginator.num_pages)
+# def search(request):
+#     query = request.GET.get('search')
+#     if not query:
+#         output_message = ''
+#         data = []
+#     else:
+#         output_message = query
+#         query_result_list = range(15)
+#         paginator = Paginator(query_result_list, 10)
+#         page = request.GET.get('page')
+#         try:
+#             data = paginator.page(page)
+#         except PageNotAnInteger:
+#             data = paginator.page(1)
+#         except EmptyPage:
+#             data = paginator.page(paginator.num_pages)
 
-    return render_to_response(
-        'search.html',
-        {
-            'output_message': output_message,
-            'data': data,
-            'magic_url': request.get_full_path(),
-            'form': SearchForm()
-        }
-    )
+#     return render_to_response(
+#         'search.html',
+#         {
+#             'output_message': output_message,
+#             'data': data,
+#             'magic_url': request.get_full_path(),
+#             'form': SearchForm()
+#         }
+#     )
 
 def home(request):
     return render_to_response('home.html')
+
+def similar_search(request):
+    return render_to_response('search_similar.html')
+
+def custom_search(request):
+    return render_to_response('search_custom.html')
+
