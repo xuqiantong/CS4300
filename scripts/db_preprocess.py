@@ -130,20 +130,26 @@ def remove_dupes_allbud():
                 if "known as" in sentence:
                     needed_sentence = sentence
                     break
-            if "\"" in needed_sentence:
-                matches=re.findall(r'\"(.*?)\"',needed_sentence)
+            if needed_sentence == "":
+                new_allbud_data.append(curr_strain_data)
+                done_lst.append(curr_strain_data['name'])
             else:
-                # print(needed_sentence)
-                curr_phrase = re.findall(r'(known as(\s\S+)+[,)])', needed_sentence)
-                if len(curr_phrase) == 0:
-                    new_leafly_data.append(curr_strain_data)
-                    done_lst.append(curr_strain_name)
+                final_match_lst = []
+                matches = []
+                if "\"" in needed_sentence:
+                    matches=re.findall(r'\"(.*?)\"',needed_sentence)
                 else:
-                    # print(curr_phrase[0][0])
-                    matches1 = re.findall(r'([A-Z]\w+\s)*([A-Z]\w+)+', curr_phrase[0][0])
-                    for match in matches1:
-                        curr_name = match[0] + match[1]
-                        matches.append(curr_name)
+                    # print(needed_sentence)
+                    curr_phrase = re.findall(r'(known as(\s\S+)+[,)])', needed_sentence)
+                    if len(curr_phrase) == 0:
+                        new_allbud_data.append(curr_strain_data)
+                        done_lst.append(curr_strain_data['name'])
+                    else:
+                        # print(curr_phrase[0][0])
+                        matches1 = re.findall(r'([A-Z]\w+\s)*([A-Z]\w+)+', curr_phrase[0][0])
+                        for match in matches1:
+                            curr_name = match[0] + match[1]
+                            matches.append(curr_name)
 
                 for match in matches:
                     new_match = match
@@ -223,19 +229,66 @@ def combine_leafly_allbud_dicts():
         json.dump(full_data, outfile)
 
 
-def combine_leafly_data(curr_strainobject, strain_match_lst,):
-    pass
+def combine_leafly_data(curr_strainobject, strain_match_lst, info_dict):
+
+    new_obj = curr_strainobject
+    counter = 0
+    if new_obj["rating"] != "No Reviews" and new_obj["rating"] != "":
+        new_obj["rating"] = float(new_obj["rating"])
+        counter += 1
+    else:
+        new_obj["rating"] = 0.0
+
+    new_obj["name"] = [new_obj["name"]]
+
+    obj_match_lst = []
+    for k in strain_match_lst:
+        if k in info_dict.keys():
+            obj_match_lst.append(info_dict[k])
+        else:
+            new_obj["name"] += [k]
 
 
 
+    for m in obj_match_lst:
+        if "name" not in m.keys():
+            continue
+        else:
+            new_obj["description"] += "/n" + m["description"]
+            curr_pos = new_obj["negative_effects"]
+            new_pos = m["negative_effects"]
+            new_obj["negative_effects"] = list(set(curr_pos + new_pos))
+
+            curr_loc = new_obj["popular_locations"]
+            new_loc = m["popular_locations"]
+            new_obj["popular_locations"] = list(set(curr_loc + new_loc))
+
+            curr_gen = new_obj["general_effects"]
+            new_gen = m["general_effects"]
+            new_obj["general_effects"] = list(set(curr_gen + new_gen))
+
+            curr_med = new_obj["medical_symptoms_it_treats"]
+            new_med = m["medical_symptoms_it_treats"]
+            new_obj["medical_symptoms_it_treats"] = list(set(curr_med + new_med))
+
+            curr_flavor = new_obj["flavor_descriptors"]
+            new_flavor = m["flavor_descriptors"]
+            new_obj["flavor_descriptors"] = list(set(curr_flavor + new_flavor))
+
+            new_obj["reviews"] += m["reviews"]
+
+            if new_obj["rating"] != "No Reviews":
+                new_obj["rating"] += float(m["rating"])
+                counter += 1
 
 
-    #     if counter % 1000 == 0:
-    #         print(str(counter/len(allbud_data) * 100) + "% done")
-    #
-    # with open('../data/cleaned_allbud.json', 'w') as outfile:
-    #     json.dump(new_allbud_data, outfile)
+    if counter > 0:
+        new_obj["rating"] = new_obj["rating"] / counter
+    else:
+        new_obj["rating"] = "No Reviews"
 
+
+    return new_obj
 
 
 def remove_dupes_leafly():
@@ -255,7 +308,6 @@ def remove_dupes_leafly():
         if curr_strain_name in done_lst:
             continue
         else:
-            # curr_strain_data = allbud_data[allbud_strain]
             curr_description = curr_strain_data['description']
             tokenize_lst = sent_tokenize(curr_description)
             needed_sentence = ""
@@ -274,45 +326,127 @@ def remove_dupes_leafly():
                 if "\"" in needed_sentence:
                     matches=re.findall(r'\"(.*?)\"',needed_sentence)
                 else:
-                    # print(needed_sentence)
                     curr_phrase = re.findall(r'(known as(\s\S+)+[,)])', needed_sentence)
                     if len(curr_phrase) == 0:
                         new_leafly_data.append(curr_strain_data)
                         done_lst.append(curr_strain_name)
                     else:
-                        # print(curr_phrase[0][0])
                         matches1 = re.findall(r'([A-Z]\w+\s)*([A-Z]\w+)+', curr_phrase[0][0])
                         for match in matches1:
                             curr_name = match[0] + match[1]
                             matches.append(curr_name)
-
                 for match in matches:
                     new_match = match
                     if "," in match:
-                        new_match = match.replace(",", "")
+                        new_match = match.replace(',' , "")
+                        final_match_lst.append(new_match)
+                    else:
                         final_match_lst.append(new_match)
 
-                info_return = combine_leafly_data(curr_strain_data, final_match_lst)
+
+                info_return = combine_leafly_data(curr_strain_data, final_match_lst, leafly_data)
                 done_lst = done_lst + final_match_lst
                 new_leafly_data.append(info_return)
+
+    for new_data in new_leafly_data:
+        new_data['description'] = (new_data["description"]).replace('\u201c','\"'). \
+            replace('\u201d','\"').replace('\u2019','\''). \
+            replace('\u2013','-')
+        reviews= new_data["reviews"]
+        new_reviews = []
+        for review in reviews:
+            curr_reviews = review.replace('\u201c','\"'). \
+                replace('\u201d','\"').replace('\u2019','\''). \
+                replace('\u2013','-')
+            new_reviews.append(curr_reviews)
+        new_data["reviews"] = new_reviews
+
 
     with open('../data/cleaned_leafly.json', 'w') as outfile:
         json.dump(new_leafly_data, outfile)
 
-def combine_otri_leafly():
+
+def combine_otri_leaf_data(o_data, l_data):
+    new_obj = {**l_data, **o_data}
+    l_name = l_data["name"]
+    final_alt_names = []
+    if type(l_name) != list:
+        l_name = [l_name]
+    for alt_name in l_name:
+        if alt_name != o_data["name"]:
+            if type(alt_name) != list:
+                final_alt_names.append(alt_name)
+            else:
+                final_alt_names + l_name
+    new_obj["alternative_names"] = final_alt_names
+    return new_obj
+
+def combine_allbud_ol_data(allbud_data, ol_data):
+
+    new_obj = {** allbud_data, ** ol_data}
+    new_obj["description"] = allbud_data["description"] + "\n" + ol_data["description"]
+    if allbud_data["rating"] == "No Reviews" or ol_data["rating"] == "No Reviews" or allbud_data["rating"] == "" or ol_data["rating"] == "":
+        if allbud_data["rating"] != "No Reviews" or allbud_data["rating"] !="":
+            new_obj["rating"] = allbud_data["rating"]
+        else:
+            new_obj["rating"] = ol_data["rating"]
+    else:
+        new_obj["rating"] = (float(allbud_data["rating"]) + float(ol_data["rating"])) / 2
+    return new_obj
+
+
+
+
+def combine_all_data():
     leafly_data = {}
     otri_data = {}
+    all_bud_data = {}
     with open('../data/cleaned_leafly.json', encoding="utf8") as f:
         leafly_data = json.load(f)
-    with open('../data/strains.json', encoding="utf8") as d:
-        otri_data = json.load(d)
+    with open('../data/cleaned_allbud.json', encoding="utf8") as d:
+        all_bud_data = json.load(d)
+    with open('../data/strains.json', encoding="utf8") as k:
+        otri_data = json.load(k)
 
-    for l_data in leafly_data:
-        if l_data != None:
-            i +=1
-            print(l_data['name'])
+    o_l_lst = []
+    for o_data in otri_data["data"]:
+        curr_obj = o_data
+        o_name = o_data["name"]
+        for l_data in leafly_data:
+            l_name = l_data["name"]
+            if type(l_name) == list:
+                if o_name in l_name:
+                    combined_obj = combine_otri_leaf_data(o_data, l_data)
+                    o_l_lst.append(combined_obj)
+            else:
+                if o_name == l_name:
+                    combined_obj = combine_otri_leaf_data(o_data, l_data)
+                    o_l_lst.append(combined_obj)
 
-        # for o_data in otri_data.keys():
+
+    final_lst = []
+    for o_l_data in o_l_lst:
+        curr_obj = o_l_data
+        o_l_name_lst = (curr_obj["alternative_names"])
+        o_l_name_lst.append(curr_obj["name"])
+        for all_bud_point in all_bud_data:
+            all_bud_names = all_bud_point['name']
+            if type(all_bud_names) != list:
+                all_bud_names = [all_bud_names]
+            temp = set(all_bud_names)
+            final_name_cross = [value for value in o_l_name_lst if value in temp]
+            if len(final_name_cross) > 0:
+                combined_dict = combine_allbud_ol_data(all_bud_point, o_l_data)
+                final_lst.append(combined_dict)
+
+    print(final_lst)
+    print(len(final_lst))
+    with open('../data/combined_cleaned_data.json', 'w') as outfile:
+        json.dump(final_lst, outfile)
+
+
+
+
 
 
 
@@ -324,8 +458,7 @@ if __name__ == "__main__":
     # remove_dupes_allbud()
     # remove_dupes_leafly()
     # combine_leafly_allbud_dicts()
-    combine_otri_leafly()
-
+    combine_all_data()
 
         # curr_lst = []
         # for allbud_strain1 in allbud_data.keys():
