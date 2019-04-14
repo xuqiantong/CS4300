@@ -382,7 +382,6 @@ def combine_otri_leaf_data(o_data, l_data):
     return new_obj
 
 def combine_allbud_ol_data(allbud_data, ol_data):
-
     new_obj = {** allbud_data, ** ol_data}
     new_obj["description"] = allbud_data["description"] + "\n" + ol_data["description"]
     if allbud_data["rating"] == "No Reviews" or ol_data["rating"] == "No Reviews" or allbud_data["rating"] == "" or ol_data["rating"] == "":
@@ -392,6 +391,10 @@ def combine_allbud_ol_data(allbud_data, ol_data):
             new_obj["rating"] = ol_data["rating"]
     else:
         new_obj["rating"] = (float(allbud_data["rating"]) + float(ol_data["rating"])) / 2
+    new_obj["flavor_descriptors"] = list(set(new_obj['flavor'] + new_obj["flavor_descriptors"]))
+    new_obj.pop('flavor', None)
+    new_obj["medical"] = list(set(new_obj['medical_symptoms_it_treats'] + new_obj['medical']))
+    new_obj.pop('medical_symptoms_it_treats', None)
     return new_obj
 
 
@@ -439,8 +442,7 @@ def combine_all_data():
                 combined_dict = combine_allbud_ol_data(all_bud_point, o_l_data)
                 final_lst.append(combined_dict)
 
-    print(final_lst)
-    print(len(final_lst))
+    print((final_lst[0]).keys())
     with open('../data/combined_cleaned_data.json', 'w') as outfile:
         json.dump(final_lst, outfile)
 
