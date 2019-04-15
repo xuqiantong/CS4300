@@ -47,6 +47,11 @@ footer {
     height: 30px;
 }
 
+.tag.aroma {
+    background-color: #ab6af2;
+    color: white;
+}
+
 .strain-result {
     background-color:white;
 }
