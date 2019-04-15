@@ -58,64 +58,100 @@ def custom_search(request):
 
 @csrf_exempt
 def results(request):
-    # MAX_THC = 34.0
-    # MIN_THC = 1.0
-    # MEAN_THC = 19.092282784673504
+    MAX_THC = 34.0
+    MIN_THC = 1.0
+    MEAN_THC = 19.092282784673504
 
-    # q = QueryDict(request.body, mutable=True)
+    q = QueryDict(request.body, mutable=True)
 
-    # '''
-    # strength = q['strength']
-    # # TODO: determine which effects go in which category,
-    # effects = q['all_effects']
-    # medical = effects['medical']
-    # positive = effects['positive']
-    # negative = effects['negative']
-    # flavor = effects['flavor']
-    # aroma = effects['aroma']
+    '''
+    strength = q['strength']
+    # TODO: determine which effects go in which category,
+    effects = q['all_effects']
+    medical = effects['medical']
+    positive = effects['positive']
+    negative = effects['negative']
+    flavor = effects['flavor']
+    aroma = effects['aroma']
 
-    # #TODO: search database for strains with these medical, positive, negative, flavor, aroma
-    # strains = search()
-    # '''
-    # data = {}
-    # with open('./data/combined_cleaned_data.json', encoding="utf8") as f:
-    #     data = json.loads(f.read())
-
-    # medical_lst = q.getlist("medicalEffects[]")
-    # print(medical_lst)
-    # desired_lst = q.getlist("desiredEffects[]")
-    # undesired_lst = q.getlist("undesiredEffects[]")
-    # flavors_lst = q.getlist("flavors[]")
-    # aromas_lst = q.getlist("aromas[]")
-    
-    # state = request.POST.get('state')
-    # city = request.POST.get('city')
-    # strength = request.POST.get('strength')
-
-    
-    # strains = []
-    # scoring = []
-    # for i in range(len(data)):
-    #     curr_strain = data[i]
-    #     curr_thc = 0
-    #     if 'percentages' in curr_strain and 'THC' in curr_strain['percentages']:
-    #         curr_thc = curr_strain['percentages']['THC']
-    #     else:
-    #         curr_thc = MEAN_THC
-    #     actual_strength = strength / MAX_THC
-    #     compare_score = curr_thc / MAX_THC 
-    #     strength_score = MAX_THC / abs(compare_score - actual_strength)
-    #     rating_score = curr_strain['rating']/5
-    #     overall_score = strength_score * 30 + rating_score * 70
-
-    #     scoring.append((overall_score, strain))
+    #TODO: search database for strains with these medical, positive, negative, flavor, aroma
+    strains = search()
+    '''
+    data = {}
+    with open('./data/combined_cleaned_data.json', encoding="utf8") as f:
+        data = json.loads(f.read())
 
 
-    # sorted_strains = sorted(scoring, key=lambda tup: tup[0], reverse=True)
-    # output = [i[1] for i in sorted_strains]
+    l = (dict(request.POST)).keys()
+    k = {}
+    for i in l:
+        k = i
+
+    q = json.loads(k)
+    print(q)
+
+    medical_lst = q.get("medicalEffects")
+    if medical_lst == None:
+        medical_lst = []
+    desired_lst = q.get("desiredEffects")
+
+    if desired_lst == None:
+        desired_lst = []
+    undesired_lst = q.get("undesiredEffects")
+    if undesired_lst == None:
+        desired_lst = []
+    flavors_lst = q.get("flavors")
+    if flavors_lst == None:
+        flavors_lst = []
+    aromas_lst = q.get("aromas")
+    if aromas_lst == None:
+        aromas_lst = []
+
+    state = q.get('state')
+    city = q.get('city')
+    strength = q.get('strength')
+
+
+
+
+    strains = []
+    scoring = []
+    for i in range(len(data)):
+        curr_strain = data[i]
+        if (set(medical_lst).issubset(curr_strain['medical'])) and \
+        (set(desired_lst).issubset(curr_strain['positive'])) and \
+        (set(undesired_lst).issubset(curr_strain['negative_effects'])) and \
+        (set(flavors_lst).issubset(curr_strain['flavor_descriptors'])) and \
+        (set(aromas_lst).issubset(curr_strain['aroma'])):
+            curr_thc = 0
+            if 'percentages' in curr_strain and 'THC' in curr_strain['percentages']:
+                curr_thc = curr_strain['percentages']['THC']
+            else:
+                curr_thc = str(MEAN_THC)
+            if strength == None:
+                strength == MEAN_THC
+            if len(curr_thc) > 2:
+                curr = curr_thc.split("-")
+                curr_thc = (curr[0])[0:]
+            actual_strength = float(curr_thc[:-1]) / MAX_THC
+            compare_score = float(curr_thc[:-1]) / MAX_THC
+            compare = abs(compare_score - actual_strength)
+            if compare == 0:
+                compare = 1
+            strength_score = MAX_THC / compare
+            rating_score = float(curr_strain['rating'])/5
+            overall_score = strength_score * 30 + rating_score * 70
+            scoring.append((overall_score, curr_strain["name"]))
+    sorted_strains = sorted(scoring, key=lambda tup: tup[0], reverse=True)
+
+    print(sorted_strains)
+    print(len(sorted_strains))
+
+    top_ten = sorted_strains[:10]
+
 
 
     # replace data with the list of strain jsons we want to display on the front end
-    data = [{"strain_name": "Cheese"}, {"strain_name": "Strawberry"}]
+    data = [{"strain_name": "Chse"}, {"strain_name": "Strawberry"}]
     return HttpResponse(json.dumps(data))
     # return HttpResponse(json.dumps(output))
