@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    
+    $("#similarSearch").slideDown(1000);
     // Effects entry set up
     $('#medical-effects').keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);

@@ -58,59 +58,61 @@ def custom_search(request):
 
 @csrf_exempt
 def results(request):
-    MAX_THC = 34.0
-    MIN_THC = 1.0
-    MEAN_THC = 19.092282784673504
+    # MAX_THC = 34.0
+    # MIN_THC = 1.0
+    # MEAN_THC = 19.092282784673504
 
-    q = QueryDict(request.body, mutable=True)
+    # q = QueryDict(request.body, mutable=True)
 
-    '''
-    strength = q['strength']
-    # TODO: determine which effects go in which category,
-    effects = q['all_effects']
-    medical = effects['medical']
-    positive = effects['positive']
-    negative = effects['negative']
-    flavor = effects['flavor']
-    aroma = effects['aroma']
+    # '''
+    # strength = q['strength']
+    # # TODO: determine which effects go in which category,
+    # effects = q['all_effects']
+    # medical = effects['medical']
+    # positive = effects['positive']
+    # negative = effects['negative']
+    # flavor = effects['flavor']
+    # aroma = effects['aroma']
 
-    #TODO: search database for strains with these medical, positive, negative, flavor, aroma
-    strains = search()
-    '''
-    data = {}
-    with open('./data/combined_cleaned_data.json', encoding="utf8") as f:
-        data = json.loads(f.read())
+    # #TODO: search database for strains with these medical, positive, negative, flavor, aroma
+    # strains = search()
+    # '''
+    # data = {}
+    # with open('./data/combined_cleaned_data.json', encoding="utf8") as f:
+    #     data = json.loads(f.read())
 
-    medical_lst = q.getlist("medicalEffects[]")
-    desired_lst = q.getlist("desiredEffects[]")
-    undesired_lst = q.getlist("undesiredEffects[]")
-    flavors_lst = q.getlist("flavors[]")
-    aromas_lst = q.getlist("aromas[]")
+    # medical_lst = q.getlist("medicalEffects[]")
+    # print(medical_lst)
+    # desired_lst = q.getlist("desiredEffects[]")
+    # undesired_lst = q.getlist("undesiredEffects[]")
+    # flavors_lst = q.getlist("flavors[]")
+    # aromas_lst = q.getlist("aromas[]")
     
-    state = request.POST.get('state')
-    city = request.POST.get('city')
-    strength = request.POST.get('strength')
+    # state = request.POST.get('state')
+    # city = request.POST.get('city')
+    # strength = request.POST.get('strength')
 
     
-    strains = []
-    scoring = []
-    for i in range(len(data)):
-        curr_strain = data[i]
-        curr_thc = 0
-        if 'percentages' in curr_strain and 'THC' in curr_strain['percentages']:
-            curr_thc = curr_strain['percentages']['THC']
-        else:
-            curr_thc = MEAN_THC
-        actual_strength = strength / MAX_THC
-        compare_score = curr_thc / MAX_THC 
-        strength_score = MAX_THC / abs(compare_score - actual_strength)
-        rating_score = curr_strain['rating']/5
-        overall_score = strength_score * 30 + rating_score * 70
-        scoring.append((overall_score, strain))
+    # strains = []
+    # scoring = []
+    # for i in range(len(data)):
+    #     curr_strain = data[i]
+    #     curr_thc = 0
+    #     if 'percentages' in curr_strain and 'THC' in curr_strain['percentages']:
+    #         curr_thc = curr_strain['percentages']['THC']
+    #     else:
+    #         curr_thc = MEAN_THC
+    #     actual_strength = strength / MAX_THC
+    #     compare_score = curr_thc / MAX_THC 
+    #     strength_score = MAX_THC / abs(compare_score - actual_strength)
+    #     rating_score = curr_strain['rating']/5
+    #     overall_score = strength_score * 30 + rating_score * 70
+
+    #     scoring.append((overall_score, strain))
 
 
-    sorted_strains = sorted(scoring, key=lambda tup: tup[0], reverse=True)
-    output = [i[1] for i in sorted_strains]
+    # sorted_strains = sorted(scoring, key=lambda tup: tup[0], reverse=True)
+    # output = [i[1] for i in sorted_strains]
 
 
     # replace data with the list of strain jsons we want to display on the front end
