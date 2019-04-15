@@ -7,5 +7,6 @@ urlpatterns = [
     path('', views.home),
     # url('search', views.search),
     url('search-similar', views.similar_search),
-    url('search-custom', views.custom_search)
+    url('search-custom', views.custom_search),
+    url('results', views.results)
 ]

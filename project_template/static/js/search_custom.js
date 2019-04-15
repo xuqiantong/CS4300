@@ -1,10 +1,5 @@
 $(document).ready(function(){
-    // $(window).keydown(function(event){
-    //     if(event.keyCode == 13) {
-    //         event.preventDefault();
-    //         return false;
-    //     }
-    // });
+    // Strength slider configuration
     $("#strengthRange").slider({
         value:50,
         min: 0,
@@ -16,6 +11,7 @@ $(document).ready(function(){
     });
     $( "#strengthValue" ).html(  $('#strengthRange').slider('value') );
 
+    // Effects entry set up
     $('#medical-effects').keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
@@ -49,6 +45,8 @@ $(document).ready(function(){
             $(this).parent().remove();
         });
     });
+
+    // Flavors entry set up
     $('#flavors').keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
@@ -58,6 +56,26 @@ $(document).ready(function(){
         }
         $(".remove-btn").click(function() {
             $(this).parent().remove();
+        });
+    });
+
+    // Submit request logic
+    $( "#similarSearch" ).submit(function( event ) {
+        event.preventDefault();
+        $.post( "/results", { 
+            data: "John"
+        }).done(function( data ) {
+            data = JSON.parse(data);
+            data.forEach(function(strain){
+                console.log(strain);
+                $("#results").append('<div class="card strain-result border-0 shadow mb-2"><div class="card-body">' + strain.strain_name + '</div>')
+            });
+            $("#similarSearch").animate({
+                width: "30%"
+            }, 500, function(){
+                $("#results").show(500);
+            });
+            
         });
     });
 

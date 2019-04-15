@@ -5,7 +5,7 @@
 {% endblock headers %}
 
 {% block content %}
-<div class="container d-flex justify-content-center">
+<div class="d-flex justify-content-center">
     <form id="similarSearch" class="p-5 mt-4 shadow rounded bg-light" action="/similar-search/" method="post">
         <h2 class="pb-3">Custom Strain Search</h2>
         <div class="form-group d-flex flex-column">
@@ -31,33 +31,10 @@
             <div id="strengthRange" class="mb-3"></div>
             <div class="d-flex align-items-center justify-content-between pb-2">
                 <label class="m-0 pr-3" for="flavors">Flavors:</label>
-                <input type="email" class="form-control w-75" id="flavors" placeholder="eg. Cherry">
+                <input class="form-control w-75" id="flavors" placeholder="eg. Cherry">
             </div>
 
             <div id="allFlavors" class="d-inline-flex flex-wrap border rounded bg-white p-1 mb-2"></div>
-            <!-- <label>Flavors/Aromas:</label> -->
-            <!-- <div class="d-flex flex-column pb-3">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                    <label class="form-check-label" for="inlineCheckbox1">Cherry</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                    <label class="form-check-label" for="inlineCheckbox2">Blueberry</label>
-                </div>
-            </div> -->
-
-            <!-- <label>Aromas:</label>
-            <div class="d-flex flex-column pb-2">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                    <label class="form-check-label" for="inlineCheckbox1">Cherry</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                    <label class="form-check-label" for="inlineCheckbox2">Blueberry</label>
-                </div>
-            </div> -->
             
             <div class="d-flex justify-content-between align-items-center pb-3">
                 <label class="pr-2 m-0" for="city">City:</label>
@@ -68,9 +45,15 @@
 
         </div>
         <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-dark">Submit</button>
+            <button id="search-btn" type="submit" class="btn btn-dark">Search</button>
         </div>
     </form>
+    <div id="results" class="mt-4 ml-3 p-3">
+        
+    </div>
+    <script>$("#results").hide();</script>
 </div>
+
+
 
 {% endblock content %}
