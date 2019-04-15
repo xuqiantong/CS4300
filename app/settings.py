@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-    'project_template',
+    'MariWanna',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +84,16 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', 
+#         'NAME': 'BestBud',
+#         'USER': 'root',
+#         'PASSWORD': 'leaflykids',
+#         'HOST': '192.241.152.37',
+#         'PORT': '3306',
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
