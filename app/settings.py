@@ -78,22 +78,22 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql', 
-#         'NAME': 'BestBud',
-#         'USER': 'root',
-#         'PASSWORD': 'leaflykids',
-#         'HOST': '192.241.152.37',
-#         'PORT': '3306',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'BestBud',
+        'USER': 'root',
+        'PASSWORD': 'leaflykids',
+        'HOST': '192.241.152.37',
+        'PORT': '3306',
+    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {

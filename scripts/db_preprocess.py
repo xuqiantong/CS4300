@@ -442,7 +442,7 @@ def combine_all_data():
                 combined_dict = combine_allbud_ol_data(all_bud_point, o_l_data)
                 final_lst.append(combined_dict)
 
-    print((final_lst[0]).keys())
+
     with open('../data/combined_cleaned_data.json', 'w') as outfile:
         json.dump(final_lst, outfile)
 
