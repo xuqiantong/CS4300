@@ -77,17 +77,34 @@ def results(request):
     #TODO: search database for strains with these medical, positive, negative, flavor, aroma
     strains = search()
     '''
+    data = {}
+    with open('./data/combined_cleaned_data.json', encoding="utf8") as f:
+        data = json.loads(f.read())
+
+    medical_lst = q.getlist("medicalEffects[]")
+    desired_lst = q.getlist("desiredEffects[]")
+    undesired_lst = q.getlist("undesiredEffects[]")
+    flavors_lst = q.getlist("flavors[]")
+    aromas_lst = q.getlist("aromas[]")
+    
+    state = request.POST.get('state')
+    city = request.POST.get('city')
+    strength = request.POST.get('strength')
+
+    
     strains = []
     scoring = []
-    for strain in strains:
-        strain['strain_name'] = strain['name']
-        if 'percentages' in strain and 'THC' in strain['percentages']:
-            thc = strain['percentages']['THC']
+    for i in range(len(data)):
+        curr_strain = data[i]
+        curr_thc = 0
+        if 'percentages' in curr_strain and 'THC' in curr_strain['percentages']:
+            curr_thc = curr_strain['percentages']['THC']
         else:
-            thc = MEAN_THC
-        actual_strength = strenght * MAX_THC
-        strength_score = MAX_THC / abs(thc/MAX_THC - actual_strength)
-        rating_score = strain['rating']/5
+            curr_thc = MEAN_THC
+        actual_strength = strength / MAX_THC
+        compare_score = curr_thc / MAX_THC 
+        strength_score = MAX_THC / abs(compare_score - actual_strength)
+        rating_score = curr_strain['rating']/5
         overall_score = strength_score * 30 + rating_score * 70
         scoring.append((overall_score, strain))
 

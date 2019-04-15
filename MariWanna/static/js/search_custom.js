@@ -73,6 +73,9 @@ $(document).ready(function(){
     });
     $( "#strengthValue" ).html(  $('#strengthRange').slider('value') );
 
+    let removeX = function(val) {
+        return val.substring(0, val.length - 1)
+    }
     let requestData = {};
     requestData.medicalEffects = [];
     requestData.desiredEffects = [];
@@ -95,26 +98,31 @@ $(document).ready(function(){
     // Submit request logic
     $( "#similarSearch" ).submit(function( event ) {
         event.preventDefault();
+        requestData.medicalEffects = [];
+        requestData.desiredEffects = [];
+        requestData.undesiredEffects = [];
+        requestData.flavors = [];
+        requestData.aromas = [];
         $("#allEffects").children().each(function(){
             let effect = $(this).text();
             if ($(this).hasClass("medical-effect")) {
-                requestData.medicalEffects.push(effect);
+                requestData.medicalEffects.push(removeX(effect));
             } else if ($(this).hasClass("desired-effect")) {
-                requestData.desiredEffects.push(effect);
+                requestData.desiredEffects.push(removeX(effect));
             } else {
-                requestData.undesiredEffects.push(effect);
+                requestData.undesiredEffects.push(removeX(effect));
             }
         });
         $("#allFlavors").children().each(function() {
             let tag = $(this).text();
             if ($(this).hasClass("flavor")) {
-                requestData.flavors.push(tag);
+                requestData.flavors.push(removeX(tag));
             } else {
-                requestData.aromas.push(tag);
+                requestData.aromas.push(removeX(tag));
             }
         })
         console.log(requestData);
-        $.post( "/results", requestData)
+        $.post( "/results", JSON.stringify(requestData))
         .done(function( data ) {
             data = JSON.parse(data);
             $("#results").empty();
