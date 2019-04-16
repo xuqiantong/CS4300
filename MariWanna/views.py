@@ -141,17 +141,17 @@ def results(request):
             strength_score = MAX_THC / compare
             rating_score = float(curr_strain['rating'])/5
             overall_score = strength_score * 30 + rating_score * 70
-            scoring.append((overall_score, curr_strain["name"]))
+            scoring.append((overall_score, curr_strain))
     sorted_strains = sorted(scoring, key=lambda tup: tup[0], reverse=True)
 
     print(sorted_strains)
     print(len(sorted_strains))
 
-    top_ten = sorted_strains[:10]
+    top_ten = sorted_strains[:9]
 
 
 
     # replace data with the list of strain jsons we want to display on the front end
-    data = [{"strain_name": "Chse"}, {"strain_name": "Strawberry"}]
+    data = top_ten
     return HttpResponse(json.dumps(data))
     # return HttpResponse(json.dumps(output))

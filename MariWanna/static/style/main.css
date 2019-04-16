@@ -40,7 +40,7 @@ footer {
 }
 
 #results {
-    width: 60%;
+    width: 65%;
 }
 
 .tag {
@@ -52,16 +52,16 @@ footer {
     color: white;
 }
 
-.strain-result {
-    background-color:white;
+.card.strain-result {
+    width: 31% !important;
 }
 
 .strain-result:hover {
     background-color: #d5e8d5;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+    -webkit-transition: all 0.25s ease;
+    -moz-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease;
 }
 
 .remove-btn {
