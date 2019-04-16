@@ -132,7 +132,7 @@ $(document).ready(function(){
                 // '<img src="' + strain[1]["image"] +'" class="card-img-top" alt="...">' +
                 '<div class="card-body">' +
                   '<div class="d-flex justify-content-between"><h5 class="card-title font-weight-bolder mb-1">' + strain[1]["name"] +'</h5><p class="text-muted text-small">' + strain[0] + '</p></div>' +
-                  '<p class="card-text"> rating: '+ strain[1]["rating"] +'/5</p>' +
+                  '<p class="card-text mb-1 text-muted font-italic">Rating: '+ strain[1]["rating"] +'/5</p>' +
                   '<p class="card-text">'+ strain[1]["description"].substring(0, 90) +'...</p>' +
                   '<a href="#" class="text-success">See More</a>' +
                 '</div>' +

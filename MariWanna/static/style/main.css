@@ -56,6 +56,10 @@ footer {
     width: 31% !important;
 }
 
+.strain-result p {
+    font-family: 'Roboto', sans-serif;
+}
+
 .strain-result:hover {
     background-color: #d5e8d5;
     -webkit-transition: all 0.25s ease;
