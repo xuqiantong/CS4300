@@ -442,6 +442,29 @@ def combine_all_data():
                 combined_dict = combine_allbud_ol_data(all_bud_point, o_l_data)
                 final_lst.append(combined_dict)
 
+    word_dict = {}
+    word_dict['Relaxed'] = "Relaxing"
+    word_dict['Euphoria'] = "Euphoric"
+    word_dict['Uplifted'] = "Uplifting"
+
+
+    for entry in final_lst:
+        curr_general = entry['general_effects']
+        curr_positive = entry['positive']
+        curr_entry_effects = curr_general + curr_positive
+        for index in range(len(curr_entry_effects)):
+            new_val = word_dict.get(curr_entry_effects[index])
+            if new_val != None:
+                curr_entry_effects[index] = new_val
+        entry['positive'] = set(curr_entry_effects)
+        del entry['general_effects']
+        entry['positive'] = list(map(lambda x:x.lower(), entry["positive"]))
+        entry['negative_effects'] = list(map(lambda x:x.lower(), entry["negative_effects"]))
+        entry['aroma'] = list(map(lambda x:x.lower(), entry["aroma"]))
+        entry['flavor_descriptors'] = list(map(lambda x:x.lower(), entry["flavor_descriptors"]))
+        entry['medical'] = list(map(lambda x:x.lower(), entry["medical"]))
+
+
 
     with open('../data/combined_cleaned_data.json', 'w') as outfile:
         json.dump(final_lst, outfile)
@@ -461,33 +484,3 @@ if __name__ == "__main__":
     # remove_dupes_leafly()
     # combine_leafly_allbud_dicts()
     combine_all_data()
-
-        # curr_lst = []
-        # for allbud_strain1 in allbud_data.keys():
-        #     curr_score = editDistDP(allbud_strain, allbud_strain1, \
-        #         len(allbud_strain), len(allbud_strain1) )
-        #     if curr_score <= 2:
-        #         curr_tup = (curr_otreeba_strain, curr_score)
-        #         curr_lst.append(curr_tup)
-        #     curr_tup = (allbud_strain1, curr_score)
-        #     curr_lst.append(curr_tup)
-        # curr_lst.sort(key=lambda tup: tup[1])
-
-
-
-
-    # total_lst = []
-    # for allbud_strain in allbud_data.keys():
-    #     curr_lst = []
-    #     for otreeba_strain in otreeba_strains_data:
-    #         curr_otreeba_strain = otreeba_strain['name']
-    #         curr_score = editDistDP(allbud_strain.lower(), curr_otreeba_strain.lower(), \
-    #             len(allbud_strain), len(curr_otreeba_strain) )
-    #         if curr_score <= 3:
-    #             curr_tup = (curr_otreeba_strain, curr_score)
-    #             curr_lst.append(curr_tup)
-    #     # curr_lst.sort(key=lambda tup: tup[1])
-    #     if curr_lst != []:
-    #         total_lst.append(allbud_strain)
-    #         print(allbud_strain)
-    # print(len(total_lst))
