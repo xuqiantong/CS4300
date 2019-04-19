@@ -470,6 +470,11 @@ def combine_all_data():
         json.dump(final_lst, outfile)
 
 
+def add_vectors():
+    data = {}
+    with open('../data/combined_cleaned_data.json') as f:
+        data = json.load(f)
+
 
 
 
@@ -484,3 +489,4 @@ if __name__ == "__main__":
     # remove_dupes_leafly()
     # combine_leafly_allbud_dicts()
     combine_all_data()
+    # add_vectors()
