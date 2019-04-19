@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 import json
-import scripts.database_connection as db
+# import scripts.database_connection as db
 
 
 from .forms import SearchForm
