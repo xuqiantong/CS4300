@@ -70,13 +70,13 @@ footer {
     font-family: 'Roboto', sans-serif;
 }
 
-.strain-result:hover {
+/* .strain-result:hover {
     background-color: #d5e8d5;
     -webkit-transition: all 0.25s ease;
     -moz-transition: all 0.25s ease;
     -o-transition: all 0.25s ease;
     transition: all 0.25s ease;
-}
+} */
 
 .remove-btn {
     background-color: white;
@@ -94,4 +94,12 @@ footer {
     background-color: red;
     color: white;
     cursor: pointer;
+}
+
+.modal-triggor {
+    cursor: pointer;
+}
+
+.modal-triggor:hover {
+    text-decoration: underline;
 }
