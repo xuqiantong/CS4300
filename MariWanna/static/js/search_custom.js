@@ -1,4 +1,27 @@
 $(document).ready(function(){
+
+    // Autocomplete Options
+    let medical_effects = ["Cramps", "Depression", "Eye Pressure", "Fatigue", "Headaches",
+        "Inflammation", "Insomnia", "Lack of Appetite", "Muscle Spasms", "Nausea",
+        "Pain", "Seizures", "Spasticity", "Stress"];
+    let desired_effects = ["Aroused", "Creative", "Energetic", "Euphoric", "Focused", 
+        "Giggly", "Happy", "Hungry", "Relaxed", "Sleepy", "Talkative", "Tingly", "Uplifted"];
+    let undesired_effects = ["Anxious", "Dizzy", "Dry Eyes", "Dry Mouth", "Headache", "Paranoid"];
+    let flavors = ["Apple", "Berry", "Blueberry", "Bubble Gum", "Buttery", "Candy", "Caramel",
+        "Cheesy", "Chemical", "Cherry", "Chocolate", "Citrus", "Coffee", "Creamy",
+        "Dank", "Diesel", "Flowery", "Fruity", "Grape", "Grapefruit", "Hash",
+        "Herbal", "Honey", "Lavender", "Lemon", "Lime", "Mango", "Menthol", "Mint",
+        "Nutty", "Orange", "Peppery", "Pine", "Pineapple", "Sage", "Skunky", "Sour",
+        "Spicy", "Strawberry", "Sugary", "Sweet", "Tangy", "Tea", "Tobacco",
+        "Tropical", "Vanilla", "Woody"];
+    let aromas = ["Apple", "Banana", "Berry", "Blueberry", "Bubble Gum", "Candy", "Caramel",
+        "Cheese", "Chemical", "Cherry", "Chocolate", "Citrus", "Coffee", "Creamy",
+        "Dank", "Diesel", "Earthy", "Floral", "Flowery", "Fragrant", "Fruity", "Fuel",
+        "Grape", "Grapefruit", "Grassy", "Harsh", "Hash", "Herbal", "Kush",
+        "Lavender", "Lemon", "Lime", "Mango", "Mellow", "Mint", "Musky", "Nutty",
+        "Orange", "Pepper", "Pine", "Pineapple", "Pungent", "Sage", "Skunky", "Sour",
+        "Spicy", "Strawberry", "Sweet", "Tropical", "Vanilla", "Woody"];
+   
     $("#similarSearch").slideDown(1000);
     // Effects entry set up
     $('#medical-effects').keypress(function(event){
@@ -11,7 +34,14 @@ $(document).ready(function(){
         $(".remove-btn").click(function() {
             $(this).parent().remove();
         });
+    }).autocomplete({
+        source: function(request, response) {
+            var results = $.ui.autocomplete.filter(medical_effects, request.term);
+    
+            response(results.slice(0, 5));
+        }
     });
+
     $('#desired-effects').keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
@@ -22,7 +52,11 @@ $(document).ready(function(){
         $(".remove-btn").click(function() {
             $(this).parent().remove();
         });
+    }).autocomplete({
+        source: desired_effects,
+        max: 5
     });
+
     $('#undesired-effects').keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
@@ -33,6 +67,9 @@ $(document).ready(function(){
         $(".remove-btn").click(function() {
             $(this).parent().remove();
         });
+    }).autocomplete({
+        source: undesired_effects,
+        max: 5
     });
 
     // Flavors entry set up
@@ -46,6 +83,9 @@ $(document).ready(function(){
         $(".remove-btn").click(function() {
             $(this).parent().remove();
         });
+    }).autocomplete({
+        source: flavors,
+        max: 5
     });
 
     $('#aromas').keypress(function(event){
@@ -58,6 +98,9 @@ $(document).ready(function(){
         $(".remove-btn").click(function() {
             $(this).parent().remove();
         });
+    }).autocomplete({
+        source: aromas,
+        max: 5
     });
 
     // Strength slider configuration
@@ -125,7 +168,12 @@ $(document).ready(function(){
         $.post( "/results", JSON.stringify(requestData))
         .done(function( data ) {
             data = JSON.parse(data);
-            $("#results").empty();
+            
+            $('#results').empty();
+            // $("#results").children().fadeOut(500, function() {
+            //     $('#results').empty();
+            // });
+
             data.forEach(function(strain){
                 console.log(strain);
                 $("#results").append('<div class="card strain-result ml-2 mr-2 mb-2 shadow">' + 
@@ -136,7 +184,7 @@ $(document).ready(function(){
                   '<p class="card-text">'+ strain[1]["description"].substring(0, 90) +'...</p>' +
                   '<a href="#" class="text-success">See More</a>' +
                 '</div>' +
-              '</div>')
+              '</div>');
                 // $("#results").append('<div class="card strain-result border-0 shadow mb-2"><div class="card-body">' + strain.strain_name + '</div>')
             });
 

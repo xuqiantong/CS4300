@@ -52,6 +52,16 @@ footer {
     color: white;
 }
 
+.btn-aromas {
+    background-color: #ab6af2;
+    color: white;
+}
+
+.btn-aromas:hover {
+    background-color: #8c46d6;
+    color: white;
+}
+
 .card.strain-result {
     width: 31% !important;
 }

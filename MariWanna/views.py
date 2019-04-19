@@ -5,36 +5,10 @@ from django.shortcuts import render_to_response
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 import json
+import scripts.database_connection as db
+
 
 from .forms import SearchForm
-
-# Create your views here.
-# def search(request):
-#     query = request.GET.get('search')
-#     if not query:
-#         output_message = ''
-#         data = []
-#     else:
-#         output_message = query
-#         query_result_list = range(15)
-#         paginator = Paginator(query_result_list, 10)
-#         page = request.GET.get('page')
-#         try:
-#             data = paginator.page(page)
-#         except PageNotAnInteger:
-#             data = paginator.page(1)
-#         except EmptyPage:
-#             data = paginator.page(paginator.num_pages)
-
-#     return render_to_response(
-#         'search.html',
-#         {
-#             'output_message': output_message,
-#             'data': data,
-#             'magic_url': request.get_full_path(),
-#             'form': SearchForm()
-#         }
-#     )
 
 def home(request):
     return render_to_response('home.html')
@@ -44,7 +18,6 @@ def similar_search(request):
 
 def custom_search(request):
     return render_to_response('search_custom.html')
-
 
 '''
     MAX_THC = 34.0
@@ -111,9 +84,6 @@ def results(request):
     city = q.get('city')
     strength = q.get('strength')
 
-
-
-
     strains = []
     scoring = []
     for i in range(len(data)):
@@ -148,7 +118,6 @@ def results(request):
     print(len(sorted_strains))
 
     top_ten = sorted_strains[:9]
-
 
 
     # replace data with the list of strain jsons we want to display on the front end
