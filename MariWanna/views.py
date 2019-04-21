@@ -5,17 +5,17 @@ from django.shortcuts import render_to_response
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 import json
-# import scripts.database_connection as db
-# from scipy import spatial
 from numpy import array, dot
 from numpy.linalg import norm
 import numpy as np
-
-
-
+import sys
+sys.path.append('../../scripts')
+import scripts.database_connection as db
 from .forms import SearchForm
 
+
 def home(request):
+    db.select_test()
     return render_to_response('home.html')
 
 def similar_search(request):
@@ -23,6 +23,7 @@ def similar_search(request):
 
 def custom_search(request):
     return render_to_response('search_custom.html')
+
 
 def cosine_sim(a, b):
     RATING_WEIGHT = 3
@@ -157,3 +158,41 @@ def strain_to_vector(input, keys_vector):
 #     MIN_THC = 1.0
 #     MEAN_THC = 19.092282784673504
 #
+
+# curr_strain = data[i]
+#         if (set(medical_lst).issubset(curr_strain['medical'])) and \
+#         (set(desired_lst).issubset(curr_strain['positive'])) and \
+#         (set(undesired_lst).issubset(curr_strain['negative_effects'])) and \
+#         (set(flavors_lst).issubset(curr_strain['flavor_descriptors'])) and \
+#         (set(aromas_lst).issubset(curr_strain['aroma'])):
+#             curr_thc = 0
+#             if 'percentages' in curr_strain and 'THC' in curr_strain['percentages']:
+#                 curr_thc = curr_strain['percentages']['THC']
+#             else:
+#                 curr_thc = str(MEAN_THC)
+#             if strength == None:
+#                 strength == MEAN_THC
+#             if len(curr_thc) > 2:
+#                 curr = curr_thc.split("-")
+#                 curr_thc = (curr[0])[0:]
+#             actual_strength = float(curr_thc[:-1]) / MAX_THC
+#             compare_score = float(curr_thc[:-1]) / MAX_THC
+#             compare = abs(compare_score - actual_strength)
+#             if compare == 0:
+#                 compare = 1
+#             strength_score = MAX_THC / compare
+#             rating_score = float(curr_strain['rating'])/5
+#             overall_score = strength_score * 30 + rating_score * 70
+#             scoring.append((overall_score, curr_strain))
+#     sorted_strains = sorted(scoring, key=lambda tup: tup[0], reverse=True)
+#
+#     print(sorted_strains)
+#     print(len(sorted_strains))
+#
+#     top_ten = sorted_strains[:9]
+#
+#
+#     # replace data with the list of strain jsons we want to display on the front end
+#     data = top_ten
+#     return HttpResponse(json.dumps(data))
+#     # return HttpResponse(json.dumps(output))
