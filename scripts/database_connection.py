@@ -14,8 +14,6 @@ def select_test():
      cursor.execute('SELECT strain_name FROM strains WHERE id < 10;')
 
      result = cursor.fetchall()
-     for x in result:
-     	print(x);
 
      connection.close()
 
