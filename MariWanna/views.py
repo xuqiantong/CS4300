@@ -6,6 +6,11 @@ from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 import json
 # import scripts.database_connection as db
+# from scipy import spatial
+from numpy import array, dot
+from numpy.linalg import norm
+import numpy as np
+
 
 
 from .forms import SearchForm
@@ -19,15 +24,21 @@ def similar_search(request):
 def custom_search(request):
     return render_to_response('search_custom.html')
 
-'''
-    MAX_THC = 34.0
-    MIN_THC = 1.0
-    MEDIAN_THC = 20.0
-    MEAN_THC = 19.092282784673504
+def cosine_sim(a, b):
+    RATING_WEIGHT = 3
+    CONDITIONS_WEIGHT = 5
 
-    print(request)
-    print("asdlkfjalskdfjasfldkjasdflkj")
-'''
+    w = np.zeros((187)) #40, 146, 1
+    for i in range(41, 186):
+        w[i] = CONDITIONS_WEIGHT
+    w[186] = RATING_WEIGHT
+
+    dot = np.dot(w*a, w*b)
+    norma = np.linalg.norm(w*a)
+    normb = np.linalg.norm(w*b)
+    cos = dot / (norma * normb)
+    return cos
+
 
 @csrf_exempt
 def results(request):
@@ -53,15 +64,15 @@ def results(request):
     data = {}
     with open('./data/combined_cleaned_data.json', encoding="utf8") as f:
         data = json.loads(f.read())
-
+    keys_vector = []
+    with open('./data/keys_vector.json') as f:
+        keys_vector = json.load(f)
 
     l = (dict(request.POST)).keys()
     k = {}
     for i in l:
         k = i
-
     q = json.loads(k)
-    print(q)
 
     medical_lst = q.get("medicalEffects")
     if medical_lst == None:
@@ -79,48 +90,70 @@ def results(request):
     aromas_lst = q.get("aromas")
     if aromas_lst == None:
         aromas_lst = []
+    keyword_lst = q.get("keyword")
+    if keyword_lst == None:
+        keyword_lst = []
 
     state = q.get('state')
     city = q.get('city')
     strength = q.get('strength')
 
-    strains = []
+    strain = {
+        'positive': desired_lst,
+        'negative_effects': undesired_lst,
+        'medical': medical_lst,
+        'aroma': aromas_lst,
+        'flavor_descriptors': flavors_lst,
+        'keywords': keyword_lst
+    }
+    search_strain_vector = strain_to_vector(strain, keys_vector)
+
     scoring = []
     for i in range(len(data)):
         curr_strain = data[i]
-        if (set(medical_lst).issubset(curr_strain['medical'])) and \
-        (set(desired_lst).issubset(curr_strain['positive'])) and \
-        (set(undesired_lst).issubset(curr_strain['negative_effects'])) and \
-        (set(flavors_lst).issubset(curr_strain['flavor_descriptors'])) and \
-        (set(aromas_lst).issubset(curr_strain['aroma'])):
-            curr_thc = 0
-            if 'percentages' in curr_strain and 'THC' in curr_strain['percentages']:
-                curr_thc = curr_strain['percentages']['THC']
-            else:
-                curr_thc = str(MEAN_THC)
-            if strength == None:
-                strength == MEAN_THC
-            if len(curr_thc) > 2:
-                curr = curr_thc.split("-")
-                curr_thc = (curr[0])[0:]
-            actual_strength = float(curr_thc[:-1]) / MAX_THC
-            compare_score = float(curr_thc[:-1]) / MAX_THC
-            compare = abs(compare_score - actual_strength)
-            if compare == 0:
-                compare = 1
-            strength_score = MAX_THC / compare
-            rating_score = float(curr_strain['rating'])/5
-            overall_score = strength_score * 30 + rating_score * 70
-            scoring.append((overall_score, curr_strain))
+        cos_sim = cosine_sim(search_strain_vector, array(curr_strain['vector']))
+        # result = 1 - spatial.distance.cosine(search_strain_vector, array(curr_strain['vector']))
+        scoring.append((cos_sim, curr_strain))
+
     sorted_strains = sorted(scoring, key=lambda tup: tup[0], reverse=True)
-
-    print(sorted_strains)
-    print(len(sorted_strains))
-
     top_ten = sorted_strains[:9]
-
-
     # replace data with the list of strain jsons we want to display on the front end
     data = top_ten
     return HttpResponse(json.dumps(data))
-    # return HttpResponse(json.dumps(output))
+
+
+def strain_to_vector(input, keys_vector):
+    average_inputs = []
+    with open('./data/averages.json') as f:
+        average_inputs = json.load(f)
+
+    vector_list_1 = input['positive'] + input['negative_effects'] + \
+        input['medical'] + input['aroma'] + input['flavor_descriptors']
+
+    vector_list = []
+    for vector in vector_list_1:
+        vector_two = vector.lower()
+        vector_list.append(vector_two)
+
+    cond_vector = []
+    for key,cur_avg in zip(keys_vector, average_inputs):
+        if key in vector_list:
+            cond_vector.append(1)
+        else:
+            cond_vector.append(cur_avg)
+
+    #rating
+    cond_vector.append(1)
+
+    # keyword_lst = input['keyword']
+    for i in range(40):
+        cond_vector.append(0)
+
+    return array(cond_vector)
+
+
+
+#     MAX_THC = 34.0
+#     MIN_THC = 1.0
+#     MEAN_THC = 19.092282784673504
+#
