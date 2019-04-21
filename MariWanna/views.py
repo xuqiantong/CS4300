@@ -5,12 +5,16 @@ from django.shortcuts import render_to_response
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 import json
-# import scripts.database_connection as db
+import sys
+sys.path.append('../../scripts')
+
+import scripts.database_connection as db
 
 
 from .forms import SearchForm
 
 def home(request):
+    db.select_test()
     return render_to_response('home.html')
 
 def similar_search(request):
