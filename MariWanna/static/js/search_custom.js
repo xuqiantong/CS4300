@@ -22,8 +22,32 @@ $(document).ready(function(){
         "Orange", "Pepper", "Pine", "Pineapple", "Pungent", "Sage", "Skunky", "Sour",
         "Spicy", "Strawberry", "Sweet", "Tropical", "Vanilla", "Woody"];
    
-    $("#similarSearch").slideDown(1000);
+    $("#similarSearch").slideDown(500);
+
+
     // Effects entry set up
+    $('#key-words').keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13' && $(this).val()!=""){
+            event.preventDefault();
+            $('#allEffects').append("<p class=\"tag key-word d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-secondary rounded\">" + $(this).val() + "<span class=\"remove-btn\">x</span></p>");
+            $(this).val("");
+        }
+        $(".remove-btn").click(function() {
+            $(this).parent().remove();
+        });
+    });
+
+    $("#key-words-btn").click(function(){
+        if ($("#key-words").val() != "") {
+            $('#allEffects').append("<p class=\"tag key-word d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-secondary rounded\">" + $("#key-words").val() + "<span class=\"remove-btn\">x</span></p>");
+            $("#key-words").val("");
+            $(".remove-btn").click(function() {
+                $(this).parent().remove();
+            });
+        }
+    });
+
     $('#medical-effects').keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
@@ -42,6 +66,16 @@ $(document).ready(function(){
         }
     });
 
+    $("#medical-effects-btn").click(function(){
+        if ($("#medical-effects").val() != "") {
+            $('#allEffects').append("<p class=\"tag medical-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-primary rounded\">" + $("#medical-effects").val() + "<span class=\"remove-btn\">x</span></p>");
+            $("#medical-effects").val("");
+            $(".remove-btn").click(function() {
+                $(this).parent().remove();
+            });
+        }
+    });
+
     $('#desired-effects').keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
@@ -55,6 +89,15 @@ $(document).ready(function(){
     }).autocomplete({
         source: desired_effects,
         max: 5
+    });
+    $("#desired-effects-btn").click(function(){
+        if ($("#desired-effects").val() != "") {
+            $('#allEffects').append("<p class=\"tag desired-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-success rounded\">" + $("#desired-effects").val() + "<span class=\"remove-btn\">x</span></p>");
+            $("#desired-effects").val("");
+            $(".remove-btn").click(function() {
+                $(this).parent().remove();
+            });
+        }
     });
 
     $('#undesired-effects').keypress(function(event){
@@ -71,13 +114,22 @@ $(document).ready(function(){
         source: undesired_effects,
         max: 5
     });
+    $("#undesired-effects-btn").click(function(){
+        if ($("#undesired-effects").val() != "") {
+            $('#allEffects').append("<p class=\"tag undesired-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-danger rounded\">" + $("#undesired-effects").val() + "<span class=\"remove-btn\">x</span></p>");
+            $("#undesired-effects").val("");
+            $(".remove-btn").click(function() {
+                $(this).parent().remove();
+            });
+        }
+    });
 
     // Flavors entry set up
     $('#flavors').keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
             event.preventDefault();
-            $('#allFlavors').append("<p class=\"tag flavor d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-info rounded\">" + $(this).val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag flavor d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-info rounded\">" + $(this).val() + "<span class=\"remove-btn\">x</span></p>");
             $(this).val("");
         }
         $(".remove-btn").click(function() {
@@ -87,21 +139,41 @@ $(document).ready(function(){
         source: flavors,
         max: 5
     });
+    $("#flavors-btn").click(function(){
+        if ($("#flavors").val() != "") {
+            $('#allEffects').append("<p class=\"tag flavor d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-info rounded\">" + $("#flavors").val() + "<span class=\"remove-btn\">x</span></p>");
+            $("#flavors").val("");
+            $(".remove-btn").click(function() {
+                $(this).parent().remove();
+            });
+        }
+    });
 
-    $('#aromas').keypress(function(event){
-        var keycode = (event.keyCode ? event.keyCode : event.which);
+    $('#aromas').keypress(function(event) {
+        let keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
             event.preventDefault();
-            $('#allFlavors').append("<p class=\"tag aroma d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light rounded\">" + $(this).val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag aroma d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light rounded\">" + $(this).val() + "<span class=\"remove-btn\">x</span></p>");
             $(this).val("");
         }
         $(".remove-btn").click(function() {
             $(this).parent().remove();
         });
-    }).autocomplete({
+    })
+    .autocomplete({
         source: aromas,
         max: 5
     });
+    $("#aromas-btn").click(function(){
+        if ($("#aromas").val() != "") {
+            $('#allEffects').append("<p class=\"tag aroma d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light rounded\">" + $("#aromas").val() + "<span class=\"remove-btn\">x</span></p>");
+            $("#aromas").val("");
+            $(".remove-btn").click(function() {
+                $(this).parent().remove();
+            });
+        }
+    });
+    
 
     // Strength slider configuration
     $("#strengthRange").slider({
@@ -192,8 +264,6 @@ $(document).ready(function(){
                     $("#modal-undesired").text(strain[1]["negative"]);                    
                     $("#modal-flavors").text(strain[1]["flavors"]);
                     $("#modal-aromas").text(strain[1]["aromas"]);
-
-
                 });
                 // $("#results").append('<div class="card strain-result border-0 shadow mb-2"><div class="card-body">' + strain.strain_name + '</div>')
             });

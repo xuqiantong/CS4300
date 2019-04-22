@@ -8,34 +8,61 @@
 <div class="d-flex justify-content-center">
     <div id="similarSearch" >
         
-    <form class="pl-5 pr-5 pt-5 pb-4 mt-4 mb-4 shadow rounded bg-light" action="/search-similar/" method="post">
+    <form class="pl-5 pr-5 pt-5 pb-4 mt-4 mb-4 shadow rounded bg-light">
         <h3 class="pb-3">Custom Strain Search</h3>
         <div class="form-group d-flex flex-column">
             <div id="inputEffects" class="d-flex flex-column">
                 <div class="d-flex align-items-center justify-content-between pb-2">
-                    <label class="m-0 pr-3" for="medical-effects">Medical Effects:</label>
+                    <label class="m-0 w-50" for="key-words">Key Words:</label>
+                    <div class="input-group">
+                        <input class="form-control w-75" id="key-words" placeholder="">
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary" id="key-words-btn" type="button">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between pb-2">
+                    <label class="m-0 w-50" for="medical-effects">Medical Effects:</label>
                     <div class="input-group">
                         <input class="form-control w-75" id="medical-effects" placeholder="eg. Anxiety">
                         <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">Add</button>
+                            <button class="btn btn-primary" id="medical-effects-btn" type="button">Add</button>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between pb-2">
-                    <label for="desired-effects" class="m-0">Desired Effects:</label>
+                    <label for="desired-effects" class="m-0 w-50">Desired Effects:</label>
                     <div class="input-group">
                         <input class="form-control w-75" id="desired-effects" placeholder="eg. Euphoria">
                         <div class="input-group-append">
-                            <button class="btn btn-success" type="button">Add</button>
+                            <button class="btn btn-success" id="desired-effects-btn" type="button">Add</button>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between pb-2">
-                    <label for="undesired-effects" class="m-0">Undesired Effects:</label>
+                    <label for="undesired-effects" class="m-0 w-50">Undesired Effects:</label>
                     <div class="input-group">
                         <input class="form-control w-75" id="undesired-effects" placeholder="eg. Dry Eyes">
                         <div class="input-group-append">
-                            <button class="btn btn-danger" type="button">Add</button>
+                            <button class="btn btn-danger" id="undesired-effects-btn" type="button">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between pb-2">
+                    <label class="m-0 w-50" for="flavors">Flavors:</label>
+                    <div class="input-group">
+                        <input class="form-control w-75" id="flavors" placeholder="eg. Cherry">
+                        <div class="input-group-append">
+                            <button class="btn btn-info" id="flavors-btn" type="button">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between pb-2">
+                    <label class="m-0 w-50" for="aromas">Aromas:</label>
+                    <div class="input-group">
+                        <input class="form-control w-75" id="aromas" placeholder="eg. Skunky">
+                        <div class="input-group-append">
+                            <button class="btn btn-aromas" id="aromas-btn" type="button">Add</button>
                         </div>
                     </div>
                 </div>
@@ -47,28 +74,6 @@
             <!-- <div class="d-flex pb-2"><span class="m-2">MIN</span><input type="range" class="form-control-range" id="strengthRange"><span class="m-2">MAX</span></div> -->
             <div id="strengthRange" class="mb-3"></div>
 
-            <div class="d-flex align-items-center justify-content-between pb-2">
-                <label class="m-0 pr-3" for="flavors">Flavors:</label>
-                <div class="input-group">
-                    <input class="form-control w-75" id="flavors" placeholder="eg. Cherry">
-                    <div class="input-group-append">
-                        <button class="btn btn-info" type="button">Add</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex align-items-center justify-content-between pb-2">
-                <label class="m-0 pr-3" for="aromas">Aromas:</label>
-                <div class="input-group">
-                    <input class="form-control w-75" id="aromas" placeholder="eg. Skunky">
-                    <div class="input-group-append">
-                        <button class="btn btn-aromas" type="button">Add</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="allFlavors" class="d-inline-flex flex-wrap border rounded bg-white p-1 mb-2"></div>
-            
             <div class="d-flex justify-content-between align-items-center pb-2">
                 <label class="pr-2 m-0" for="city">City:</label>
                 <input class="form-control mr-3" id="city" placeholder="Boca Raton">
