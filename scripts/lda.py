@@ -7,7 +7,29 @@ from constants import additional_stopwords
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 from nltk.tokenize import RegexpTokenizer
 import json
+import pandas as pd
 
+def format_topics_sentences(ldamodel, corpus, texts):
+    # Init output
+    sent_topics_df = pd.DataFrame()
+
+    # Get main topic in each document
+    for i, row in enumerate(ldamodel[corpus]):
+        row = sorted(row, key=lambda x: (x[1]), reverse=True)
+        # Get the Dominant topic, Perc Contribution and Keywords for each document
+        for j, (topic_num, prop_topic) in enumerate(row):
+            if j == 0:  # => dominant topic
+                wp = ldamodel.show_topic(topic_num)
+                topic_keywords = ", ".join([word for word, prop in wp])
+                sent_topics_df = sent_topics_df.append(pd.Series([int(topic_num), round(prop_topic,4), topic_keywords]), ignore_index=True)
+            else:
+                break
+    sent_topics_df.columns = ['Dominant_Topic', 'Perc_Contribution', 'Topic_Keywords']
+
+    # Add original text to the end of the output
+    contents = pd.Series(texts)
+    sent_topics_df = pd.concat([sent_topics_df, contents], axis=1)
+    return(sent_topics_df)
 
 def remove_stopwords(texts, stop_words):
     return [[word for word in doc if word not in stop_words] for doc in texts]
@@ -60,16 +82,6 @@ def lda_try():
 
     corpus = [id2word.doc2bow(text) for text in data_lemmatized]
 
-    # lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
-    #                                        id2word=id2word,
-    #                                        num_topics=20,
-    #                                        random_state=100,
-    #                                        update_every=1,
-    #                                        chunksize=100,
-    #                                        passes=10,
-    #                                        alpha='auto',
-    #                                        per_word_topics=True)
-    # pprint(lda_model.print_topics())
     mallet_path = '../data/mallet-2.0.8/bin/mallet'
 
     ldamallet = gensim.models.wrappers.LdaMallet(mallet_path, corpus=corpus, num_topics=20, id2word=id2word)
@@ -77,18 +89,26 @@ def lda_try():
     # model_topics = ldamallet.show_topics(formatted=False)
     # print(ldamallet.print_topics(num_words=10))
 
-    final_lst = ldamallet.show_topics(num_topics = 20, formatted=False)
-    # print((final_lst))
-    final_dict = {}
-    for topic in final_lst:
-        final_dict[str(topic[0])] = {}
-        for word in topic[1]:
-            (final_dict[str(topic[0])])[word[0]] = word[1]
+    df_topic_sents_keywords = format_topics_sentences(ldamodel=ldamallet, corpus=corpus, texts=final_tokenized)
+    final_lda_list = df_topic_sents_keywords['Dominant_Topic'].tolist()
+    print(final_lda_list)
+    with open('../data/final_lda.json', 'w') as f:
+        json.dump(final_lda_list,f)
 
 
-
-    with open('../data/lda.json', 'w') as f:
-        json.dump(final_dict, f)
+    # final_lst = ldamallet.show_topics(num_topics = 20, formatted=False)
+    # # print((final_lst))
+    # final_dict = {}
+    # for topic in final_lst:
+    #     final_dict[str(topic[0])] = {}
+    #     for word in topic[1]:
+    #         (final_dict[str(topic[0])])[word[0]] = word[1]
+    #
+    #
+    #
+    #
+    # with open('../data/lda.json', 'w') as f:
+    #     json.dump(final_dict, f)
 
 
 
