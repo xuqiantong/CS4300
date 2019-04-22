@@ -37,7 +37,6 @@ $(document).ready(function(){
             $(this).parent().remove();
         });
     });
-
     $("#key-words-btn").click(function(){
         if ($("#key-words").val() != "") {
             $('#allEffects').append("<p class=\"tag key-word d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-secondary rounded\">" + $("#key-words").val() + "<span class=\"remove-btn\">x</span></p>");
@@ -65,7 +64,6 @@ $(document).ready(function(){
             response(results.slice(0, 5));
         }
     });
-
     $("#medical-effects-btn").click(function(){
         if ($("#medical-effects").val() != "") {
             $('#allEffects').append("<p class=\"tag medical-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-primary rounded\">" + $("#medical-effects").val() + "<span class=\"remove-btn\">x</span></p>");
@@ -124,7 +122,6 @@ $(document).ready(function(){
         }
     });
 
-    // Flavors entry set up
     $('#flavors').keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
