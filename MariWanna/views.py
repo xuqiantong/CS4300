@@ -26,17 +26,15 @@ def custom_search(request):
 
 
 def cosine_sim(a, b):
-    RATING_WEIGHT = 3
-    CONDITIONS_WEIGHT = 5
 
-    w = np.zeros((187)) #40, 146, 1
-    for i in range(41, 186):
-        w[i] = CONDITIONS_WEIGHT
-    w[186] = RATING_WEIGHT
 
-    dot = np.dot(w*a, w*b)
-    norma = np.linalg.norm(w*a)
-    normb = np.linalg.norm(w*b)
+    dot = np.dot(a, b)
+    norma = np.linalg.norm(a)
+    normb = np.linalg.norm(b)
+    if norma == 0:
+        norma = 1
+    if normb == 0:
+        normb = 1
     cos = dot / (norma * normb)
     return cos
 
@@ -108,91 +106,55 @@ def results(request):
         'keywords': keyword_lst
     }
     search_strain_vector = strain_to_vector(strain, keys_vector)
+    #finding the relevant dimensions to run cosine sim on
+    relv_search = []
+    search_strain = []
+    for index in range(len(search_strain_vector)):
+        is_val = search_strain_vector[index]
+        if is_val == 1:
+            search_strain.append(1)
+            relv_search.append((index, search_strain_vector[index]))
+    print(relv_search)
+
 
     scoring = []
     for i in range(len(data)):
         curr_strain = data[i]
-        cos_sim = cosine_sim(search_strain_vector, array(curr_strain['vector']))
-        # result = 1 - spatial.distance.cosine(search_strain_vector, array(curr_strain['vector']))
+        curr_array = []
+        for relv_item in relv_search:
+            relv_index = relv_item[0]
+            curr_value = (curr_strain['vector'])[relv_index]
+            curr_array.append(curr_value)
+        cos_sim = cosine_sim(array(search_strain), array(curr_array))
         scoring.append((cos_sim, curr_strain))
 
     sorted_strains = sorted(scoring, key=lambda tup: tup[0], reverse=True)
     top_ten = sorted_strains[:9]
+    # for strain in top_ten:
+    #     print(strain[1]['positive'])
     # replace data with the list of strain jsons we want to display on the front end
     data = top_ten
     return HttpResponse(json.dumps(data))
 
 
 def strain_to_vector(input, keys_vector):
-    average_inputs = []
-    with open('./data/averages.json') as f:
-        average_inputs = json.load(f)
-
     vector_list_1 = input['positive'] + input['negative_effects'] + \
         input['medical'] + input['aroma'] + input['flavor_descriptors']
-
-    vector_list = []
-    for vector in vector_list_1:
-        vector_two = vector.lower()
-        vector_list.append(vector_two)
-
+    vector_list = [x.lower() for x in vector_list_1]
     cond_vector = []
-    for key,cur_avg in zip(keys_vector, average_inputs):
+    #for now input 0s for the 40 keywords. add later after input keyword bar
+    #is implemented
+    for i in range(40):
+        cond_vector.append(0)
+    for key in keys_vector:
         if key in vector_list:
             cond_vector.append(1)
         else:
-            cond_vector.append(cur_avg)
+            cond_vector.append(0)
 
     #rating
     cond_vector.append(1)
 
-    # keyword_lst = input['keyword']
-    for i in range(40):
-        cond_vector.append(0)
+
 
     return array(cond_vector)
-
-
-
-#     MAX_THC = 34.0
-#     MIN_THC = 1.0
-#     MEAN_THC = 19.092282784673504
-#
-
-# curr_strain = data[i]
-#         if (set(medical_lst).issubset(curr_strain['medical'])) and \
-#         (set(desired_lst).issubset(curr_strain['positive'])) and \
-#         (set(undesired_lst).issubset(curr_strain['negative_effects'])) and \
-#         (set(flavors_lst).issubset(curr_strain['flavor_descriptors'])) and \
-#         (set(aromas_lst).issubset(curr_strain['aroma'])):
-#             curr_thc = 0
-#             if 'percentages' in curr_strain and 'THC' in curr_strain['percentages']:
-#                 curr_thc = curr_strain['percentages']['THC']
-#             else:
-#                 curr_thc = str(MEAN_THC)
-#             if strength == None:
-#                 strength == MEAN_THC
-#             if len(curr_thc) > 2:
-#                 curr = curr_thc.split("-")
-#                 curr_thc = (curr[0])[0:]
-#             actual_strength = float(curr_thc[:-1]) / MAX_THC
-#             compare_score = float(curr_thc[:-1]) / MAX_THC
-#             compare = abs(compare_score - actual_strength)
-#             if compare == 0:
-#                 compare = 1
-#             strength_score = MAX_THC / compare
-#             rating_score = float(curr_strain['rating'])/5
-#             overall_score = strength_score * 30 + rating_score * 70
-#             scoring.append((overall_score, curr_strain))
-#     sorted_strains = sorted(scoring, key=lambda tup: tup[0], reverse=True)
-#
-#     print(sorted_strains)
-#     print(len(sorted_strains))
-#
-#     top_ten = sorted_strains[:9]
-#
-#
-#     # replace data with the list of strain jsons we want to display on the front end
-#     data = top_ten
-#     return HttpResponse(json.dumps(data))
-#     # return HttpResponse(json.dumps(output))
