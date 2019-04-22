@@ -470,6 +470,21 @@ def combine_all_data():
 
 
 
+def add_dominant_topic():
+    all_data = {}
+    dom_topic_data = []
+    with open('../data/combined_cleaned_data.json', encoding="utf8") as f:
+        all_data = json.load(f)
+    with open('../data/final_lda.json', encoding="utf8") as k:
+        dom_topic_data = json.load(k)
+
+    curr_index = 0
+    for strain in all_data:
+        strain['dominant_topic'] = dom_topic_data[curr_index]
+        curr_index += 1
+
+    with open('../data/combined_cleaned_data.json', 'w') as outfile:
+        json.dump(all_data, outfile)
 
 
 
@@ -482,4 +497,5 @@ if __name__ == "__main__":
     # remove_dupes_allbud()
     # remove_dupes_leafly()
     # combine_leafly_allbud_dicts()
-    combine_all_data()
+    # combine_all_data()
+    add_dominant_topic()
