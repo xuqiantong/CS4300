@@ -1,6 +1,8 @@
 body {
     background-image: url('../images/background.jpg');
+    background-attachment: fixed;
     background-position: center;
+    background-repeat: no-repeat;
     background-size: cover;
     height: 100%;
     font-family: 'Open Sans', sans-serif;
@@ -12,13 +14,9 @@ footer {
     width: 100%;
  }
 
-.global-search {
-    text-align:center;
-    padding:10px;
-}
-
-.global-search .form-control {
-    width:500px;
+*:focus {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 #similarSearch {
