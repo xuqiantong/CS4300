@@ -50,6 +50,9 @@ def find_dims():
     condition_matrix = np.array([np.array(xi) for xi in cond_vectors])
     final_matrix = np.concatenate((rev_des_matrix, condition_matrix), axis=1)
 
+    average_matrix = list(np.mean(final_matrix, axis=0))
+
+
     # add vector to every strain
     i = 0
     for data in input_data:
@@ -58,6 +61,9 @@ def find_dims():
 
     with open('../data/combined_cleaned_data.json', 'w') as f:
         json.dump(input_data, f)
+
+    with open('../data/averages.json', 'w') as f:
+        json.dump(average_matrix, f)
 
 
 def strain_to_vector(input, keys_vector):
@@ -69,6 +75,7 @@ def strain_to_vector(input, keys_vector):
             cond_vector.append(1)
         else:
             cond_vector.append(0)
+    cond_vector.append(float(input['rating'])/5)
     return cond_vector
 
 def gather_keys():
