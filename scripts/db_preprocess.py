@@ -1,5 +1,4 @@
 import json
-from nltk.tokenize import sent_tokenize
 import re
 from constants import *
 

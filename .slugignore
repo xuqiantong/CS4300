@@ -1,0 +1,16 @@
+venv
+*.pyc
+staticfiles
+.env
+*.sqlite3
+.idea
+
+
+data/allbud_dict_output.json
+data/allbud_output.json
+data/cleaned_allbud.json
+data/cleaned_leafly.json
+data/conditions.json
+data/leafly_output.json
+data/strains.json
+data/studies.json
