@@ -46,6 +46,7 @@ def results(request):
     MAX_THC = 34.0
     MIN_THC = 1.0
     MEAN_THC = 19.092282784673504
+    RATING_WEIGHT = 1/4
 
     q = QueryDict(request.body, mutable=True)
 
@@ -116,8 +117,6 @@ def results(request):
         if is_val == 1:
             search_strain.append(1)
             relv_search.append((index, search_strain_vector[index]))
-    print(relv_search)
-
 
     scoring = []
     for i in range(len(data)):
@@ -128,7 +127,9 @@ def results(request):
             curr_value = (curr_strain['vector'])[relv_index]
             curr_array.append(curr_value)
         cos_sim = cosine_sim(array(search_strain), array(curr_array))
-        scoring.append((cos_sim, curr_strain))
+        rating = float(curr_strain['rating'])/5
+        score = RATING_WEIGHT * (cos_sim*rating) + (1-RATING_WEIGHT) * cos_sim
+        scoring.append((score, curr_strain))
 
     sorted_strains = sorted(scoring, key=lambda tup: tup[0], reverse=True)
     top_ten = sorted_strains[:9]
