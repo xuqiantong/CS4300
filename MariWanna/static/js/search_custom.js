@@ -1,5 +1,5 @@
 $(document).ready(function(){
-
+    
     // Autocomplete Options
     let medical_effects = ["Cramps", "Depression", "Eye Pressure", "Fatigue", "Headaches",
         "Inflammation", "Insomnia", "Lack of Appetite", "Muscle Spasms", "Nausea",
@@ -24,13 +24,12 @@ $(document).ready(function(){
    
     $("#similarSearch").slideDown(500);
 
-
     // Effects entry set up
     $('#key-words').keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
             event.preventDefault();
-            $('#allEffects').append("<p class=\"tag key-word d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-secondary rounded\">" + $(this).val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag key-word d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-secondary rounded\">" + $(this).val().toLowerCase() + "<span class=\"remove-btn\">x</span></p>");
             $(this).val("");
         }
         $(".remove-btn").click(function() {
@@ -39,7 +38,7 @@ $(document).ready(function(){
     });
     $("#key-words-btn").click(function(){
         if ($("#key-words").val() != "") {
-            $('#allEffects').append("<p class=\"tag key-word d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-secondary rounded\">" + $("#key-words").val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag key-word d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-secondary rounded\">" + $("#key-words").val().toLowerCase() + "<span class=\"remove-btn\">x</span></p>");
             $("#key-words").val("");
             $(".remove-btn").click(function() {
                 $(this).parent().remove();
@@ -51,7 +50,7 @@ $(document).ready(function(){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
             event.preventDefault();
-            $('#allEffects').append("<p class=\"tag medical-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-primary rounded\">" + $(this).val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag medical-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-primary rounded\">" + $(this).val().toLowerCase() + "<span class=\"remove-btn\">x</span></p>");
             $(this).val("");
         }
         $(".remove-btn").click(function() {
@@ -66,7 +65,7 @@ $(document).ready(function(){
     });
     $("#medical-effects-btn").click(function(){
         if ($("#medical-effects").val() != "") {
-            $('#allEffects').append("<p class=\"tag medical-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-primary rounded\">" + $("#medical-effects").val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag medical-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-primary rounded\">" + $("#medical-effects").val().toLowerCase() + "<span class=\"remove-btn\">x</span></p>");
             $("#medical-effects").val("");
             $(".remove-btn").click(function() {
                 $(this).parent().remove();
@@ -78,7 +77,7 @@ $(document).ready(function(){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
             event.preventDefault();
-            $('#allEffects').append("<p class=\"tag desired-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-success rounded\">" + $(this).val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag desired-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-success rounded\">" + $(this).val().toLowerCase() + "<span class=\"remove-btn\">x</span></p>");
             $(this).val("");
         }
         $(".remove-btn").click(function() {
@@ -90,7 +89,7 @@ $(document).ready(function(){
     });
     $("#desired-effects-btn").click(function(){
         if ($("#desired-effects").val() != "") {
-            $('#allEffects').append("<p class=\"tag desired-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-success rounded\">" + $("#desired-effects").val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag desired-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-success rounded\">" + $("#desired-effects").val().toLowerCase() + "<span class=\"remove-btn\">x</span></p>");
             $("#desired-effects").val("");
             $(".remove-btn").click(function() {
                 $(this).parent().remove();
@@ -102,7 +101,7 @@ $(document).ready(function(){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
             event.preventDefault();
-            $('#allEffects').append("<p class=\"tag undesired-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-danger rounded\">" + $(this).val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag undesired-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-danger rounded\">" + $(this).val().toLowerCase() + "<span class=\"remove-btn\">x</span></p>");
             $(this).val("");
         }
         $(".remove-btn").click(function() {
@@ -114,7 +113,7 @@ $(document).ready(function(){
     });
     $("#undesired-effects-btn").click(function(){
         if ($("#undesired-effects").val() != "") {
-            $('#allEffects').append("<p class=\"tag undesired-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-danger rounded\">" + $("#undesired-effects").val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag undesired-effect d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-danger rounded\">" + $("#undesired-effects").val().toLowerCase() + "<span class=\"remove-btn\">x</span></p>");
             $("#undesired-effects").val("");
             $(".remove-btn").click(function() {
                 $(this).parent().remove();
@@ -126,7 +125,7 @@ $(document).ready(function(){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
             event.preventDefault();
-            $('#allEffects').append("<p class=\"tag flavor d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-info rounded\">" + $(this).val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag flavor d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-info rounded\">" + $(this).val().toLowerCase() + "<span class=\"remove-btn\">x</span></p>");
             $(this).val("");
         }
         $(".remove-btn").click(function() {
@@ -138,7 +137,7 @@ $(document).ready(function(){
     });
     $("#flavors-btn").click(function(){
         if ($("#flavors").val() != "") {
-            $('#allEffects').append("<p class=\"tag flavor d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-info rounded\">" + $("#flavors").val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag flavor d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light bg-info rounded\">" + $("#flavors").val().toLowerCase() + "<span class=\"remove-btn\">x</span></p>");
             $("#flavors").val("");
             $(".remove-btn").click(function() {
                 $(this).parent().remove();
@@ -150,7 +149,7 @@ $(document).ready(function(){
         let keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13' && $(this).val()!=""){
             event.preventDefault();
-            $('#allEffects').append("<p class=\"tag aroma d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light rounded\">" + $(this).val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag aroma d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light rounded\">" + $(this).val().toLowerCase() + "<span class=\"remove-btn\">x</span></p>");
             $(this).val("");
         }
         $(".remove-btn").click(function() {
@@ -163,7 +162,7 @@ $(document).ready(function(){
     });
     $("#aromas-btn").click(function(){
         if ($("#aromas").val() != "") {
-            $('#allEffects').append("<p class=\"tag aroma d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light rounded\">" + $("#aromas").val() + "<span class=\"remove-btn\">x</span></p>");
+            $('#allEffects').append("<p class=\"tag aroma d-inline-flex justify-content-center align-items-center shadow-sm border m-1 pl-2 pr-2 text-small text-light rounded\">" + $("#aromas").val().toLowerCase() + "<span class=\"remove-btn\">x</span></p>");
             $("#aromas").val("");
             $(".remove-btn").click(function() {
                 $(this).parent().remove();
@@ -235,6 +234,9 @@ $(document).ready(function(){
         })
         console.log(requestData);
         $.post( "/results", JSON.stringify(requestData))
+        .always(function() {
+            $("#loadingDiv").fadeIn();
+        })
         .done(function( data ) {
             data = JSON.parse(data);
             
@@ -242,10 +244,11 @@ $(document).ready(function(){
             // $("#results").children().fadeOut(500, function() {
             //     $('#results').empty();
             // });
+            let count = 0;
 
             data.forEach(function(strain){
                 console.log(strain);
-                $("#results").append('<div class="card strain-result ml-2 mr-2 mb-2 shadow">' + 
+                $("#results").append('<div id="strain_'+ count +'" class="card strain-result ml-2 mr-2 mb-2 shadow">' + 
                 // '<img src="' + strain[1]["image"] +'" class="card-img-top" alt="...">' +
                 '<div class="card-body">' +
                     '<div class="d-flex justify-content-between"><h5 class="card-title font-weight-bolder mb-1">' + strain[1]["name"] +'</h5><p class="text-muted text-small">' + strain[0] + '</p></div>' +
@@ -253,7 +256,9 @@ $(document).ready(function(){
                         '<p class="card-text">'+ strain[1]["description"].substring(0, 90) +'...</p>' +
                         '<p class="text-success modal-triggor" data-toggle="modal" data-target="#exampleModalLong">See More</p>' +
                     '</div>' +
-                '</div>').on("click", function() {
+                '</div>');
+                
+                $("#strain_" + count).on("click", function() {
                     $("#modal-name").text(strain[1]["name"]);
                     $("#modal-description").text(strain[1]["description"]);
                     $("#modal-medical").text(strain[1]["medical"]);
@@ -262,15 +267,18 @@ $(document).ready(function(){
                     $("#modal-flavors").text(strain[1]["flavors"]);
                     $("#modal-aromas").text(strain[1]["aromas"]);
                 });
+
+                count++;
                 // $("#results").append('<div class="card strain-result border-0 shadow mb-2"><div class="card-body">' + strain.strain_name + '</div>')
             });
+            $("#loadingDiv").fadeOut();
 
             $("#similarSearch").animate({
                 width: "30%"
             }, 500, function(){
                 $("#results").addClass("d-flex").show(500);
             });
-            
+
         });
     });
 

@@ -15,7 +15,7 @@
                 <div class="d-flex align-items-center justify-content-between pb-2">
                     <label class="m-0 w-50" for="key-words">Key Words:</label>
                     <div class="input-group">
-                        <input class="form-control w-75" id="key-words" placeholder="">
+                        <input class="form-control w-75" id="key-words" placeholder="eg. Body High">
                         <div class="input-group-append">
                             <button class="btn btn-secondary" id="key-words-btn" type="button">Add</button>
                         </div>
@@ -84,6 +84,8 @@
         </div>
         <div class="d-flex justify-content-center">
             <button id="search-btn" type="submit" class="btn btn-dark">Search</button>
+            <img class="ml-2" id="loadingDiv" height="30px" src="/static/images/icon_48.gif"/>
+            <script>$("#loadingDiv").hide()</script>
         </div>
     </form>
     <!-- Modal -->
