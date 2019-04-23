@@ -104,7 +104,7 @@ def results(request):
 
     output = {}
     for datum in data:
-        output['strain_name'] = datum[0]
+        output['name'] = datum[0]
 
     return HttpResponse(json.dumps(data))
 
