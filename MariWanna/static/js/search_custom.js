@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    
+
     // Autocomplete Options
     let medical_effects = ["Cramps", "Depression", "Eye Pressure", "Fatigue", "Headaches",
         "Inflammation", "Insomnia", "Lack of Appetite", "Muscle Spasms", "Nausea",
@@ -251,8 +251,8 @@ $(document).ready(function(){
                 $("#results").append('<div id="strain_'+ count +'" class="card strain-result ml-2 mr-2 mb-2 shadow">' + 
                 // '<img src="' + strain[1]["image"] +'" class="card-img-top" alt="...">' +
                 '<div class="card-body">' +
-                    '<div class="d-flex justify-content-between"><h5 class="card-title font-weight-bolder mb-1">' + strain[1]["name"] +'</h5><p class="text-muted text-small">' + strain[0] + '</p></div>' +
-                        '<p class="card-text mb-1 text-muted font-italic">Rating: '+ strain[1]["rating"] +'/5</p>' +
+                    '<div class="d-flex justify-content-between"><h5 class="card-title font-weight-bolder mb-1">' + strain[1]["name"] +'</h5><p class="text-muted text-small">' + strain[0].toFixed(2) + '</p></div>' +
+                        '<p class="card-text mb-1 text-muted font-italic">Rating: '+ Number(strain[1]["rating"]).toFixed(2) +'/5.00</p>' +
                         '<p class="card-text">'+ strain[1]["description"].substring(0, 90) +'...</p>' +
                         '<p class="text-success modal-triggor" data-toggle="modal" data-target="#exampleModalLong">See More</p>' +
                     '</div>' +

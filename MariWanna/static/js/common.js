@@ -16,6 +16,6 @@ $(document).ready(function(){
 ;
 
     $(window).resize( function() {
-        $("#mainContent").css("height", $(window).height() - nav_height);
+        $("#mainContent").css("min-height", $(window).height() - nav_height);
     });
 })
