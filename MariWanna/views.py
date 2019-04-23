@@ -15,7 +15,6 @@ from .forms import SearchForm
 
 @csrf_exempt
 def home(request):
-    db.select_test()
     return render_to_response('home.html')
 
 @csrf_exempt
