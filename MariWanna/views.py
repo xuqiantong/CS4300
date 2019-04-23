@@ -102,11 +102,14 @@ def results(request):
 
     data = db.select_test()
 
-    output = {}
+    output = []
     for datum in data:
-        output['name'] = datum[0]
+        new_obj = {'strain_name': datum[0]}
+        output.append(new_obj)
 
-    return HttpResponse(json.dumps(data))
+    print(output)
+
+    return HttpResponse(json.dumps(output))
 
 #
 #     strain = {
