@@ -9,8 +9,8 @@ If you have any questions dont hesistate to ask the TAs or come to office hours!
 ## Quickstart Guide
 ### 1. Cloning the repository from Git
 ```bash
-git clone https://github.com/CornellNLP/CS4300.git
-cd CS4300
+git clone https://github.com/CornellNLP/CS4300-Django-template.git
+cd CS4300-Django-template
 ```
 
 ### 2. Setting up your virtual environment
@@ -25,7 +25,10 @@ source venv/bin/activate
 # Install all requirements
 pip install -r requirements.txt
 ```
-An aside note: In the above example, we created a virtualenv for a python3 environment. For most of you, you will have python3.5.2 installed by default as we've used that version for assignments. Heroku uses python 3.6.8 for their python runtime. I don't *anticipate* there being issues if you're using python 3.5.2 for development, but if you want to be consistent with heroku, use 3.6.8.
+An aside note: In the above example, we created a virtualenv for a python3 environment. You will have python3.7.6 installed by default as we have used that version for assignments. This is what we will use for the application as well.
+
+**NOTE: While you should be able to install these requirements in the virtualenv you used for the assignments, we advise using a fresh virtualenv so you can be sure that your virtualenv's installed packages and your repository's `requirements.txt` match exactly. 
+This will be important when you add new dependencies.**
 
 If you wish to add any dependencies for future development just do this:
 
@@ -42,11 +45,13 @@ python manage.py runserver
 
 If your server, it should see output in your terminal which looks something like this:
 ```
+Watching for file changes with StatReloader
 Performing system checks...
 
 System check identified no issues (0 silenced).
-March 16, 2019 - 16:16:12
-Django version 2.1.7, using settings 'app.settings'
+
+February 27, 2020 - 03:35:20
+Django version 3.0.3, using settings 'app.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```

@@ -1,7 +1,6 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.shortcuts import render_to_response
 from django.template import loader
 
 # Create your views here.
@@ -22,11 +21,5 @@ def search(request):
         except EmptyPage:
             data = paginator.page(paginator.num_pages)
 
-    return render_to_response(
-        'search.html',
-        {
-            'output_message': output_message,
-            'data': data,
-            'magic_url': request.get_full_path(),
-        }
-    )
+    return render(request, 'search.html',
+                  {'output_message': output_message, 'data': data, 'magic_url': request.get_full_path()})
